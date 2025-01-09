@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginUserWithProviderDto } from './dto/login-user-with-provider.dto';
+import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private readonly userService: UserService) {}
+
+  async handleProviderLogin(
+    dto: LoginUserWithProviderDto
+  ): Promise<UserEntity> {
+    const user = await this.findOrCreateUser(dto);
+    return user;
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  private async findOrCreateUser(
+    dto: LoginUserWithProviderDto
+  ): Promise<UserEntity> {
+    // Check if user exists
+    let user = await this.userService.findByAccountProviderId({
+      providerAccountId: dto.providerAccountId,
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    // Create a new user if not found
+    if (!user) {
+      user = await this.userService.createWithProvider(dto);
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return user;
   }
 }

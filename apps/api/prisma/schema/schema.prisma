@@ -11,10 +11,9 @@ generator client {
 
 model User {
   id            String    @id @default(cuid())
-  firstName     String?
-  lastName      String?
-  email         String?   @unique
-  emailVerified DateTime?
+  name     String?
+  email         String    
+  emailVerified  Boolean   @default(false)
   avatar        String?
   lockedAt      DateTime?
 
@@ -32,10 +31,13 @@ model User {
   @@index(defaultWorkspace)
 }
 
+enum AccountType {
+  OAUTH
+}
 model Account {
   id                String @id @default(cuid())
   userId            String
-  type              String
+  type              AccountType @default(OAUTH)
   provider          String
   providerAccountId String @unique
   expires_at        Int?

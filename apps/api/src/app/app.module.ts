@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { CompositeAuthAPIStrategy } from '../modules/auth/strategies/composite-api.strategy';
 import { envValidation } from '@/common/config/env';
 import { DatabaseModule } from '@/modules/database/database.module';
+import { AuthModule } from '@/modules/auth/auth.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -14,14 +15,15 @@ import { DatabaseModule } from '@/modules/database/database.module';
       envFilePath: ['.env.local', '.env'],
       validate: envValidation,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: CompositeAuthAPIStrategy,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: CompositeAuthAPIStrategy,
+    // },
   ],
 })
 export class AppModule {}
