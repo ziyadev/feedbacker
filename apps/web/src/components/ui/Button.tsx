@@ -1,3 +1,4 @@
+'use client';
 // Tremor Button [v0.2.0]
 
 import React from 'react';

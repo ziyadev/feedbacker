@@ -2,7 +2,6 @@
 
 'use client';
 
-import * as React from 'react';
 import {
   RiArrowLeftDoubleLine,
   RiArrowLeftSLine,
@@ -10,6 +9,7 @@ import {
   RiArrowRightSLine,
 } from '@remixicon/react';
 import { addYears, format, isSameMonth } from 'date-fns';
+import * as React from 'react';
 import {
   DayPicker,
   useDayPicker,
@@ -21,8 +21,7 @@ import {
   type Matcher,
 } from 'react-day-picker';
 
-import { cx } from '@/lib/utils';
-import { focusRing } from '@/lib/utils';
+import { cx, focusRing } from '@/lib/utils';
 
 interface NavigationButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -256,7 +255,7 @@ const Calendar = ({
           );
         },
         Day: ({ date, displayMonth }: DayProps) => {
-          const buttonRef = React.useRef<HTMLButtonElement>(null);
+          const buttonRef = React.useRef<HTMLButtonElement>(null!);
           const { activeModifiers, buttonProps, divProps, isButton, isHidden } =
             useDayRender(date, displayMonth, buttonRef);
 

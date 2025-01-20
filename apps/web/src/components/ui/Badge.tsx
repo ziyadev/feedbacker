@@ -7,7 +7,7 @@ import { cx } from '@/lib/utils';
 
 const badgeVariants = tv({
   base: cx(
-    'inline-flex items-center gap-x-1 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset'
+    'inline-flex items-center gap-x-1 whitespace-nowrap rounded-md  font-medium ring-1 ring-inset'
   ),
   variants: {
     variant: {
@@ -32,9 +32,14 @@ const badgeVariants = tv({
         'dark:bg-yellow-400/10 dark:text-yellow-500 dark:ring-yellow-400/20',
       ],
     },
+    size: {
+      default: 'px-2 py-1 text-xs',
+      xs: 'px-1.5 py-0.3 text-[0.625rem]',
+    },
   },
   defaultVariants: {
     variant: 'default',
+    size: 'default',
   },
 });
 
@@ -43,11 +48,11 @@ interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant, ...props }: BadgeProps, forwardedRef) => {
+  ({ className, variant, size, ...props }: BadgeProps, forwardedRef) => {
     return (
       <span
         ref={forwardedRef}
-        className={cx(badgeVariants({ variant }), className)}
+        className={cx(badgeVariants({ variant, size }), className)}
         tremor-id="tremor-raw"
         {...props}
       />

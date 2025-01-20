@@ -1,10 +1,11 @@
+'use client';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // Tremor TabNavigation [v0.1.0]
 
-import React from 'react';
 import * as NavigationMenuPrimitives from '@radix-ui/react-navigation-menu';
+import React from 'react';
 
-import { cx } from '@/lib/utils';
-import { focusRing } from '@/lib/utils';
+import { cx, focusRing } from '@/lib/utils';
 
 function getSubtree(
   options: { asChild: boolean | undefined; children: React.ReactNode },
@@ -16,9 +17,11 @@ function getSubtree(
 
   const firstChild = React.Children.only(children) as React.ReactElement;
   return React.cloneElement(firstChild, {
+    // @ts-expect-error
     children:
       typeof content === 'function'
-        ? content(firstChild.props.children)
+        ? // @ts-expect-error
+          content(firstChild.props.children)
         : content,
   });
 }
@@ -67,7 +70,6 @@ const TabNavigationLink = React.forwardRef<
         disabled ? 'pointer-events-none' : ''
       )}
       ref={forwardedRef}
-      onSelect={() => {}}
       asChild={asChild}
       {...props}
     >

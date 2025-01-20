@@ -1,0 +1,26 @@
+
+{
+  "name": "web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web",
+  "projectType": "application",
+  "targets": {
+     "serve": {
+      "executor": "nx:run-script",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "development",
+       "dependsOn": ["^build"],
+      "options": {
+        "script": "dev",
+        "args": ["node-env=production"],
+        "dependencies": true
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    }
+
+  },
+  "tags": []
+}
