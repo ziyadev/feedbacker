@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { CompositeAuthAPIStrategy } from '../modules/auth/strategies/composite-api.strategy';
+
 import { envValidation } from '@/common/config/env';
-import { DatabaseModule } from '@/modules/database/database.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { DatabaseModule } from '@/modules/database/database.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -15,6 +14,13 @@ import { AuthModule } from '@/modules/auth/auth.module';
       envFilePath: ['.env.local', '.env'],
       validate: envValidation,
     }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: true,
+    //   context: ({ req }) => ({ req }),
+    //   debug: true,
+    //   playground: true,
+    // }),
     AuthModule,
   ],
   controllers: [AppController],

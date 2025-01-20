@@ -6,7 +6,7 @@ import {
   IsUrl,
 } from 'class-validator';
 
-export class LoginUserWithProviderDto {
+export class OAuathUserCallbackDto {
   @IsNotEmpty()
   @IsString()
   name: string;

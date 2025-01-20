@@ -1,10 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile, StrategyOption } from 'passport-github2';
 import { Env } from '@/common/config/env';
 import { AuthService } from '../auth.service';
-import { VerifyCallback } from 'passport-jwt';
+import { OAuathUserCallbackDto } from '../dto/oauth-user-callback.dto';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy) {
@@ -23,21 +27,22 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     } satisfies StrategyOption);
   }
 
-  async validate(
+  validate(
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: VerifyCallback
+    done: any
   ) {
-    const user = await this.authService.handleProviderLogin({
+    const user = {
       name: profile.username,
       email: profile.emails[0].value,
       emailVerified: true,
       avatar: profile.photos[0].value,
       provider: profile.provider,
       providerAccountId: profile.id,
-    });
+    } satisfies OAuathUserCallbackDto;
+    if (!user) throw new InternalServerErrorException();
 
-    done(null, user as any);
+    done(null, user);
   }
 }
