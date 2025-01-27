@@ -1,5 +1,5 @@
 {
-  "name": "@feedbacker/email",
+  "name": "@repo/email",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/email",
   "projectType": "library",
