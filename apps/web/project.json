@@ -19,6 +19,12 @@
         "development": {},
         "production": {}
       }
+    },
+    "code-gen": {
+      "executor": "nx:run-script",
+       "options": {
+        "script": "code-gen"
+      }
     }
 
   },
