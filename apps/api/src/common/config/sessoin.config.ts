@@ -1,7 +1,6 @@
-import { RedisStore } from 'connect-redis';
 import { CookieOptions } from 'express';
-import session from 'express-session';
-import { createClient } from 'redis';
+import _session from 'express-session';
+import { redisStore } from './redis-store.config';
 export interface UserSessionData {
   id: string;
   email: string;
@@ -23,14 +22,7 @@ export const sessionCookieConfig: CookieOptions = {
   maxAge: 1000 * 60 * 60 * 24 * 90, // 90 days
   sameSite: 'lax',
 };
-// init redis client
-const redisClient = createClient();
-redisClient.connect().catch(console.error);
-// init redis store
-const redisStore = new RedisStore({
-  client: redisClient,
-  prefix: 'SESSION:',
-});
+
 export const sessionConfig = {
   name: 'x-session',
   secret: process.env.SESSION_SECRET,
@@ -39,3 +31,5 @@ export const sessionConfig = {
   cookie: sessionCookieConfig,
   store: redisStore,
 };
+
+export const session = _session(sessionConfig);

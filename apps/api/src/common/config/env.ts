@@ -10,6 +10,7 @@ const envSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string(),
   PUBLIC_BASE_APP_URL: z.string().url(),
   PUBLIC_BASE_FRONT_URL: z.string().url(),
+  CSRF_SECRET: z.string().min(4),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -16,6 +16,8 @@
     "start:prod": "node dist/main"
   },
   "dependencies": {
+    "@repo/email": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@apollo/server": "^4.10.4",
     "@aws-sdk/client-s3": "^3.614.0",
     "@aws-sdk/s3-request-presigner": "^3.614.0",
@@ -42,6 +44,7 @@
     "connect-redis": "^8.0.1",
     "cookie": "^0.6.0",
     "cookie-parser": "^1.4.7",
+    "csrf-csrf": "^3.1.0",
     "express-session": "^1.18.1",
     "graphql": "^16.9.0",
     "graphql-type-json": "^0.3.2",
