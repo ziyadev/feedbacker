@@ -1,11 +1,11 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { Auth } from './decorator/auth.decorator';
 import { OAuthUser } from './decorator/oauth-user.decorator';
 import { OAuathUserCallbackDto } from './dto/oauth-user-callback.dto';
 import { GithubOAuthGuard } from './guard/github.guard';
 import { GoogleOAuthGuard } from './guard/google.guard';
+import { generateToken } from '@/common/config/csrf.config';
 
 @Controller('auth')
 export class AuthController {
@@ -50,5 +50,10 @@ export class AuthController {
       await this.authService.handleOAuthCallback(user, redirectUri);
     req.session.user = sessionData;
     res.redirect(redirectUrl);
+  }
+
+  @Get('__csrf')
+  async csrf(@Req() req: Request, @Res() res: Response) {
+    res.json({ csrfToken: generateToken(req, res) });
   }
 }
