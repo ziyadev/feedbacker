@@ -1,13 +1,21 @@
 'use client';
 import { useLastLogin } from '@/components/hooks/useLastLogin';
 import { BlurIn } from '@/components/motions/blur-in';
+import { env } from '@/env.mjs';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { Badge, Button } from '@feedbacker/ui';
 import { IconLoader } from '@tabler/icons-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { ReactNode, useEffect, useState, useTransition } from 'react';
-
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { ReactNode, useEffect, useState, useTransition } from 'react';
 export default function SignInForm() {
-  const [buttonIsLoading, setButtonIsLoading] = useState('google');
+  const { data: session, loading } = useAuth();
+  const searchParams = useSearchParams();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (session?.isAuthenticated) {
+    redirect(searchParams.get("next") || '/overview');
+  }
   return (
     <div className="flex w-full flex-col items-start sm:max-w-sm">
       <div className="relative flex items-center justify-center rounded-lg bg-white p-3 shadow-lg ring-1 ring-black/5">
@@ -103,7 +111,6 @@ export default function SignInForm() {
     </div>
   );
 }
-
 export const ProviderButton = ({
   providerName,
   icon,
@@ -122,7 +129,7 @@ export const ProviderButton = ({
   const { replace } = useRouter();
   const onClick = () => {
     startTransition(() => {
-      const url = new URL(`http://localhost:3000/api/auth/${providerName}`);
+      const url = new URL(`${env.NEXT_PUBLIC_API_URL}/auth/${providerName}`);
       // we pass redirectUri to the api if the next exists so we redirect user directly to the next after sign-in
       if (next) url.searchParams.set('redirectUri', next);
       replace(url.toString()); // redirect to the
@@ -147,7 +154,7 @@ export const ProviderButton = ({
           Racently used
         </Badge>
       )}
-      {isLoading ? <IconLoader className="mx-2 size-5 animate-spin	" /> : icon}
+      {isLoading ? <IconLoader className="mx-2 size-5 animate-spin" /> : icon}
       {label}
     </Button>
   );

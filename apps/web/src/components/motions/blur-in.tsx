@@ -1,25 +1,78 @@
-'use client';
-import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import { ComponentProps } from 'react';
+"use client";
 
-export const BlurIn: React.FC<ComponentProps<typeof motion.div>> = ({
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  UseInViewOptions,
+  Variants,
+} from "motion/react";
+import { useRef } from "react";
+
+type MarginType = UseInViewOptions["margin"];
+
+interface BlurFadeProps {
+  children: React.ReactNode;
+  className?: string;
+  variant?: {
+    hidden: { y: number };
+    visible: { y: number };
+  };
+  duration?: number;
+  delay?: number;
+  offset?: number;
+  direction?: "up" | "down" | "left" | "right";
+  inView?: boolean;
+  inViewMargin?: MarginType;
+  blur?: string;
+}
+
+export function BlurIn({
   children,
   className,
-}) => {
-  const variants1 = {
-    hidden: { filter: 'blur(10px)', opacity: 0, height: 0 },
-    visible: { filter: 'blur(0px)', opacity: 1, height: 'auto' },
+  variant,
+  duration = 0.4,
+  delay = 0,
+  offset = 6,
+  direction = "down",
+  inView = false,
+  inViewMargin = "-50px",
+  blur = "6px",
+}: BlurFadeProps) {
+  const ref = useRef(null);
+  const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
+  const isInView = !inView || inViewResult;
+  const defaultVariants: Variants = {
+    hidden: {
+      [direction === "left" || direction === "right" ? "x" : "y"]:
+        direction === "right" || direction === "down" ? -offset : offset,
+      opacity: 0,
+      filter: `blur(${blur})`,
+    },
+    visible: {
+      [direction === "left" || direction === "right" ? "x" : "y"]: 0,
+      opacity: 1,
+      filter: `blur(0px)`,
+    },
   };
+  const combinedVariants = variant || defaultVariants;
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      transition={{ duration: 0.3, ease: 'easeIn' }}
-      variants={variants1}
-      className={clsx('', className)}
-    >
-      {children}
-    </motion.div>
+    <AnimatePresence>
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        exit="hidden"
+        variants={combinedVariants}
+        transition={{
+          delay: 0.04 + delay,
+          duration,
+          ease: "easeOut",
+        }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
-};
+}
