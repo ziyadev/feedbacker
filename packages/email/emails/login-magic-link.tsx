@@ -8,9 +8,9 @@ import {
   Img,
   Preview,
   Section,
-  Text
+  Text,
 } from '@react-email/components';
-import { LOGO } from '../constants/glabal';
+import { FEEDBACKER_LOGO } from '@repo/utils';
 
 interface LoginMagicLinkEmailProps {
   url?: string;
@@ -22,7 +22,13 @@ export const LoginMagicLinkEmail = ({ url }: LoginMagicLinkEmailProps) => (
     <Preview>Your login link for Feedbacker</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={LOGO} width="42" height="42" alt="Feedbacker" style={logo} />
+        <Img
+          src={FEEDBACKER_LOGO}
+          width="42"
+          height="42"
+          alt="Feedbacker"
+          style={logo}
+        />
         <Heading style={heading}>Your login code for Feedbacker</Heading>
         <Section style={buttonContainer}>
           <Button style={button} href={url}>

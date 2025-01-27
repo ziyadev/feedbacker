@@ -15,7 +15,6 @@ export class UserResolver {
     description: 'Get the currently logged in user',
   })
   async user(@User() user: UserSessionData): Promise<UserModel> {
-    console.log(user);
     const userEntity = await this.userService.findById({ id: user.id });
     return UserMapper.toModel(userEntity);
   }

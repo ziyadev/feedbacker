@@ -8,6 +8,6 @@
     "declarationDir": "./dist/cjs",
     "moduleResolution": "node"
   },
-  "include": ["**/*.ts"],
+  "include": ["index.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts", "dist"]
 }

@@ -1,31 +1,28 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "baseUrl": ".",
     "importHelpers": true,
     "noImplicitOverride": true,
     "declaration": false,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node", "react"],
+    "types": ["node"],
     "target": "ES2015",
     "lib": ["DOM", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "Node",
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmitOnError": true,
     "allowJs": true,
     "strict": true,
-    "useUnknownInCatchVariables": false,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "useUnknownInCatchVariables": false
+  }
 }
