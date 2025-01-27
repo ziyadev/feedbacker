@@ -1,0 +1,31 @@
+{
+  "name": "@feedbacker/email",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/email",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "dependsOn": ["build-cjs", "build-esm"]
+    },
+    "build-cjs": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "packages/email/dist/cjs",
+        "main": "packages/email/index.ts",
+        "tsConfig": "packages/email/tsconfig.cjs.json",
+        "clean": true
+      }
+    },
+    "build-esm": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "packages/email/dist/esm",
+        "main": "packages/email/index.ts",
+        "tsConfig": "packages/email/tsconfig.esm.json",
+        "clean": true
+      }
+    }
+  },
+
+  "tags": ["email", "package"]
+}
