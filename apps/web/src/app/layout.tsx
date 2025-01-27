@@ -1,8 +1,7 @@
-import type { Metadata } from 'next';
-import { ThemeProvider } from 'next-themes';
+import RootProviders from '@/components/providers/root';
 import { GeistSans } from 'geist/font/sans';
+import type { Metadata } from 'next';
 import './globals.css';
-
 import { siteConfig } from './siteConfig';
 
 export const metadata: Metadata = {
@@ -47,9 +46,9 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <div className="mx-auto max-w-screen-2xl">
-          <ThemeProvider defaultTheme="system" attribute="class">
+          <RootProviders >
             {children}
-          </ThemeProvider>
+          </RootProviders>
         </div>
       </body>
     </html>
