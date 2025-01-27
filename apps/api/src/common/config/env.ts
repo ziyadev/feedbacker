@@ -8,6 +8,8 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
+  PUBLIC_BASE_APP_URL: z.string().url(),
+  PUBLIC_BASE_FRONT_URL: z.string().url(),
 });
 
 export type Env = z.infer<typeof envSchema>;

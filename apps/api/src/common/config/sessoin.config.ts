@@ -1,7 +1,7 @@
 import { RedisStore } from 'connect-redis';
+import { CookieOptions } from 'express';
 import session from 'express-session';
 import { createClient } from 'redis';
-import { CookieOptions } from 'express';
 export interface UserSessionData {
   id: string;
   email: string;
@@ -20,8 +20,8 @@ declare module 'express-session' {
 export const sessionCookieConfig: CookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
-  maxAge: 60 * 60 * 24 * 30,
-  sameSite: 'strict',
+  maxAge: 1000 * 60 * 60 * 24 * 90, // 90 days
+  sameSite: 'lax',
 };
 // init redis client
 const redisClient = createClient();

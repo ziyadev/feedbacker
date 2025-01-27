@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CompositeAuthStrategy } from '../strategies/composite-auth.strategy';
+import { SessionStrategy } from '../strategies/session.strategy';
 
 @Injectable()
-export class AuthGuard extends CompositeAuthStrategy {}
+export class AuthGuard extends SessionStrategy {}

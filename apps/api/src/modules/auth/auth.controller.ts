@@ -11,13 +11,6 @@ import { GoogleOAuthGuard } from './guard/google.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Auth({
-    isPublic: false,
-  })
-  @Get('me')
-  me() {
-    return 'me';
-  }
   @UseGuards(GoogleOAuthGuard)
   @Get('google')
   google() {

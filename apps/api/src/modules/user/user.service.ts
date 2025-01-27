@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserBuilder } from './builders/user.builder';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from '../database/repositories/user.repository';
-import { AccountService } from './services/account.service';
-import { CreateUserWithAccountDto } from './dto/create-user-with-account.dto';
 import { AccountBuilder } from './builders/account.builder';
+import { UserBuilder } from './builders/user.builder';
+import { CreateUserWithAccountDto } from './dto/create-user-with-account.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
+import { AccountService } from './services/account.service';
 
 @Injectable()
 export class UserService {
@@ -23,7 +23,7 @@ export class UserService {
     });
   }
   async findByEmail({ email }: { email: string }): Promise<UserEntity> {
-    return await this.userRepository.findUnique({
+    return await this.userRepository.findFirst({
       where: {
         email,
       },

@@ -11,21 +11,24 @@ generator client {
 
 model User {
   id            String    @id @default(cuid())
-  name     String?
-  email         String    
-  emailVerified  Boolean   @default(false)
+  name          String?
+  email         String
+  emailVerified Boolean   @default(false)
   avatar        String?
   lockedAt      DateTime?
 
   createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt @default(now())
   subscribed       Boolean  @default(true) // email subscription
   source           String? // where the user came from
   defaultWorkspace String? // slug of the user's default workspace
   referralLinkId   String? // this user's referral link ID
 
   // relational data
-  accounts Account[]
-  sessions Session[]
+  accounts         Account[]
+  sessions         Session[]
+  workspaces       Workspace[]
+  workspaceMembers WorkspaceMember[]
 
   @@index(source)
   @@index(defaultWorkspace)
@@ -34,12 +37,13 @@ model User {
 enum AccountType {
   OAUTH
 }
+
 model Account {
-  id                String @id @default(cuid())
+  id                String      @id @default(cuid())
   userId            String
   type              AccountType @default(OAUTH)
   provider          String
-  providerAccountId String @unique
+  providerAccountId String      @unique
   expires_at        Int?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

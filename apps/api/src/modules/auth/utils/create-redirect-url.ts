@@ -9,7 +9,7 @@ export default function createRedirectUrl({
   error_message?: string;
   redirectUri?: string;
 }) {
-  const url = new URL(`http://localhost:4000/auth/sign-in`);
+  const url = new URL(`${process.env.PUBLIC_BASE_FRONT_URL}/auth/sign-in`);
   url.searchParams.set('status', status);
   url.searchParams.set('provider', provider);
   if (status === 'error') url.searchParams.set('error_message', error_message);

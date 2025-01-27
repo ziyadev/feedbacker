@@ -1,12 +1,10 @@
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../guard/auth.guard';
-interface AuthOptions {
-  isPublic?: boolean;
-}
+interface AuthOptions {}
 
-export function Auth({ isPublic = true }: AuthOptions) {
+export function Auth(options?: AuthOptions) {
   return applyDecorators(
-    SetMetadata('isPublic', isPublic),
+    // SetMetadata('isPrivate', isPrivate),
     UseGuards(AuthGuard)
   );
 }

@@ -1,3 +1,4 @@
+import { Env } from '@/common/config/env';
 import {
   Injectable,
   InternalServerErrorException,
@@ -5,24 +6,21 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, Profile, StrategyOption } from 'passport-github2';
-import { Env } from '@/common/config/env';
-import { AuthService } from '../auth.service';
+import { Profile, Strategy, StrategyOption } from 'passport-github2';
 import { OAuathUserCallbackDto } from '../dto/oauth-user-callback.dto';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy) {
   private logger = new Logger(GithubStrategy.name);
-  constructor(
-    private configService: ConfigService,
-    private authService: AuthService
-  ) {
+  constructor(private configService: ConfigService) {
     super({
       clientID: configService.get<Env['GITHUB_CLIENT_ID']>('GITHUB_CLIENT_ID'),
       clientSecret: configService.get<Env['GITHUB_CLIENT_SECRET']>(
         'GITHUB_CLIENT_SECRET'
       ),
-      callbackURL: 'http://localhost:3000/api/auth/github/callback',
+      callbackURL: `${configService.get<Env['PUBLIC_BASE_APP_URL']>(
+        'PUBLIC_BASE_APP_URL'
+      )}/auth/github/callback`,
       scope: ['user'],
     } satisfies StrategyOption);
   }

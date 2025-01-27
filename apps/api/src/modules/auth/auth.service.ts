@@ -1,11 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { OAuathUserCallbackDto } from './dto/oauth-user-callback.dto';
-import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
-import { UserOauthEntity } from './interface/user-oauth.interface';
-import createRedirectUrl from './utils/create-redirect-url';
 import { UserSessionData } from '@/common/config/sessoin.config';
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
+import { OAuathUserCallbackDto } from './dto/oauth-user-callback.dto';
+import createRedirectUrl from './utils/create-redirect-url';
 
 @Injectable()
 export class AuthService {
