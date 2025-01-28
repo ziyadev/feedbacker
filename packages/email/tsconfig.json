@@ -24,5 +24,6 @@
     "allowJs": true,
     "strict": true,
     "useUnknownInCatchVariables": false
-  }
+  },
+  "exclude": ["dist"]
 }

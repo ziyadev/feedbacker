@@ -1,8 +1,14 @@
-import { customAlphabet } from "nanoid";
+import { randomBytes } from 'crypto';
 
-export const nanoid = (chars?: number) => {
-  return customAlphabet(
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    chars || 7, // 7-character random string by default
-  )();
+export const nanoid = (size: number): string => {
+  const alphabet =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const bytes = randomBytes(size);
+  let id = '';
+
+  for (let i = 0; i < size; i++) {
+    id += alphabet[bytes[i] % alphabet.length];
+  }
+
+  return id;
 };

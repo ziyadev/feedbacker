@@ -1,19 +1,31 @@
 {
   "name": "@repo/utils",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/utils/src",
+  "sourceRoot": "packages/utils",
   "projectType": "library",
-  "tags": [],
   "targets": {
     "build": {
+      "dependsOn": ["build-cjs", "build-esm"]
+    },
+    "build-cjs": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "packages/utils/dist",
-        "main": "packages/utils/src/index.ts",
-        "tsConfig": "packages/utils/tsconfig.lib.json",
-        "assets": ["packages/utils/*.md"]
+        "outputPath": "packages/utils/dist/cjs",
+        "main": "packages/utils/index.ts",
+        "tsConfig": "packages/utils/tsconfig.cjs.json",
+        "clean": true
+      }
+    },
+    "build-esm": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "packages/utils/dist/esm",
+        "main": "packages/utils/index.ts",
+        "tsConfig": "packages/utils/tsconfig.esm.json",
+        "clean": true
       }
     }
-  }
+  },
+
+  "tags": ["utils", "package"]
 }
