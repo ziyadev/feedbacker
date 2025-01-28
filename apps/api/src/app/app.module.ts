@@ -8,6 +8,8 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { DatabaseModule } from '@/modules/database/database.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserModule } from '@/modules/user/user.module';
+import { EmailModule } from '@/modules/email/email.module';
+import { TokenModule } from '@/modules/token/token.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -16,6 +18,7 @@ import { UserModule } from '@/modules/user/user.module';
       envFilePath: ['.env.local', '.env'],
       validate: envValidation,
     }),
+    EmailModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
@@ -25,6 +28,7 @@ import { UserModule } from '@/modules/user/user.module';
     }),
     AuthModule,
     UserModule,
+    TokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

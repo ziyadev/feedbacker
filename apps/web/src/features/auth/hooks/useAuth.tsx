@@ -1,14 +1,15 @@
-import { GET_USER } from '@/features/auth/api/queries';
-import { useQuery } from '@apollo/client';
+import { useUser } from '@/features/user/hooks/useUser';
+import { useLogout } from './useLogout';
 
 export const useAuth = () => {
-  const { data, ...rest } = useQuery(GET_USER);
+  const { user, ...rest } = useUser();
+
+  const logout = useLogout();
 
   return {
+    user,
+    isAuthenticated: !!user,
+    logout,
     ...rest,
-    data: {
-      ...data,
-      isAuthenticated: !!data?.user,
-    },
   };
 };

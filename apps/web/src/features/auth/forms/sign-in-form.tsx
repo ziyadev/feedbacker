@@ -8,13 +8,13 @@ import { IconLoader } from '@tabler/icons-react';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { ReactNode, useEffect, useState, useTransition } from 'react';
 export default function SignInForm() {
-  const { data: session, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const searchParams = useSearchParams();
   if (loading) {
-    return <div>Loading...</div>;
+    return <IconLoader className="mx-2 size-5 animate-spin animate-infinite animate-ease-in-out animate-alternate" />;
   }
-  if (session?.isAuthenticated) {
-    redirect(searchParams.get("next") || '/overview');
+  if (isAuthenticated) {
+    redirect(searchParams.get('next') || '/overview');
   }
   return (
     <div className="flex w-full flex-col items-start sm:max-w-sm">
@@ -76,7 +76,7 @@ export default function SignInForm() {
                 height={24}
                 fill="currentColor"
                 aria-hidden="true"
-                className="remixicon size-5 mx-2 animate-spin"
+                className="remixicon size-5 mx-2 "
               >
                 <path d="M3.06364 7.50914C4.70909 4.24092 8.09084 2 12 2C14.6954 2 16.959 2.99095 18.6909 4.60455L15.8227 7.47274C14.7864 6.48185 13.4681 5.97727 12 5.97727C9.39542 5.97727 7.19084 7.73637 6.40455 10.1C6.2045 10.7 6.09086 11.3409 6.09086 12C6.09086 12.6591 6.2045 13.3 6.40455 13.9C7.19084 16.2636 9.39542 18.0227 12 18.0227C13.3454 18.0227 14.4909 17.6682 15.3864 17.0682C16.4454 16.3591 17.15 15.3 17.3818 14.05H12V10.1818H21.4181C21.5364 10.8363 21.6 11.5182 21.6 12.2273C21.6 15.2727 20.5091 17.8363 18.6181 19.5773C16.9636 21.1046 14.7 22 12 22C8.09084 22 4.70909 19.7591 3.06364 16.4909C2.38638 15.1409 2 13.6136 2 12C2 10.3864 2.38638 8.85911 3.06364 7.50914Z" />
               </svg>
@@ -131,7 +131,11 @@ export const ProviderButton = ({
     startTransition(() => {
       const url = new URL(`${env.NEXT_PUBLIC_API_URL}/auth/${providerName}`);
       // we pass redirectUri to the api if the next exists so we redirect user directly to the next after sign-in
-      if (next) url.searchParams.set('redirectUri', next);
+      if (next) url.searchParams.set('next', next);
+      url.searchParams.set(
+        'redirectUrl',
+        encodeURI('http://app.localhost.com' + '/overview')
+      );
       replace(url.toString()); // redirect to the
     });
   };
@@ -154,7 +158,11 @@ export const ProviderButton = ({
           Racently used
         </Badge>
       )}
-      {isLoading ? <IconLoader className="mx-2 size-5 animate-spin" /> : icon}
+      {isLoading ? (
+        <IconLoader className="mx-2 size-5 animate-spin animate-infinite animate-ease-in-out animate-alternate" />
+      ) : (
+        icon
+      )}
       {label}
     </Button>
   );

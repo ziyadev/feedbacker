@@ -14,6 +14,7 @@ export * from './Input';
 export * from './Label';
 export * from './Popover';
 export * from './ProgressBar';
+export * from './Skeleton';
 export * from './ProgressCircle';
 export * from './RadioCardGroup';
 export * from './RadioGroup';

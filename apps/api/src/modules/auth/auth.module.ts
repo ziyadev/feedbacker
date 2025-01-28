@@ -11,10 +11,11 @@ import { GithubStrategy } from './strategies/github.stategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 import { SessionStrategy } from './strategies/session.strategy';
-
+import { TokenModule } from '@/modules/token/token.module';
 @Module({
   imports: [
     PassportModule,
+    TokenModule,
     UserModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({

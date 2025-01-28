@@ -42,13 +42,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased" suppressHydrationWarning>
       <body
-        className={`${GeistSans.className} overflow-y-scroll scroll-auto antialiased selection:bg-indigo-100  dark:bg-gray-950`}
+        className={`${GeistSans.className} overflow-y-scroll scroll-auto antialiased selection:bg-indigo-100 selection:text-indigo-700 dark:bg-gray-950`}
         suppressHydrationWarning
       >
         <div className="mx-auto max-w-screen-2xl">
-          <RootProviders >
-            {children}
-          </RootProviders>
+          <RootProviders>{children}</RootProviders>
         </div>
       </body>
     </html>

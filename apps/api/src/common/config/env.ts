@@ -11,6 +11,7 @@ const envSchema = z.object({
   PUBLIC_BASE_APP_URL: z.string().url(),
   PUBLIC_BASE_FRONT_URL: z.string().url(),
   CSRF_SECRET: z.string().min(4),
+  RESEND_API_KEY: z.string().startsWith('re_'),
 });
 
 export type Env = z.infer<typeof envSchema>;

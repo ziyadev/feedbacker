@@ -1,12 +1,10 @@
 import type { Config } from 'tailwindcss';
 import twForms from '@tailwindcss/forms';
+import tailwindcssAnimated from 'tailwindcss-animated';
+
 const config: Config = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/lib/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  darkMode: 'class',
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       keyframes: {
@@ -87,6 +85,6 @@ const config: Config = {
       drawerSlideRightAndFade: 'drawerSlideRightAndFade 150ms ease-in',
     },
   },
-  plugins: [twForms],
+  plugins: [twForms, tailwindcssAnimated],
 };
 export default config;
