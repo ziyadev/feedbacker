@@ -15,10 +15,68 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type ChangePasswordDto = {
+  newPassword: Scalars['String']['input'];
+  token: Scalars['String']['input'];
+};
+
+export type CheckResetPasswordTokenDto = {
+  token: Scalars['String']['input'];
+};
+
+export type CredentialsLoginDto = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type CredentialsSignUpDto = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  changePassword: Scalars['Boolean']['output'];
+  checkResetPasswordToken: Scalars['Boolean']['output'];
+  credentialLogin: UserModel;
+  credentialSignUp: UserModel;
+  sendResetPasswordLink: Scalars['Boolean']['output'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  input: ChangePasswordDto;
+};
+
+
+export type MutationCheckResetPasswordTokenArgs = {
+  input: CheckResetPasswordTokenDto;
+};
+
+
+export type MutationCredentialLoginArgs = {
+  input: CredentialsLoginDto;
+};
+
+
+export type MutationCredentialSignUpArgs = {
+  input: CredentialsSignUpDto;
+};
+
+
+export type MutationSendResetPasswordLinkArgs = {
+  input: SendEmailResetPasswordLinkDto;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Get the currently logged in user */
   user: UserModel;
+};
+
+export type SendEmailResetPasswordLinkDto = {
+  email: Scalars['String']['input'];
 };
 
 export type UserModel = {
@@ -38,6 +96,20 @@ export type UserModel = {
   /** Timestamp of when the user account was last updated */
   updatedAt: Scalars['DateTime']['output'];
 };
+
+export type CredentialLoginMutationVariables = Exact<{
+  input: CredentialsLoginDto;
+}>;
+
+
+export type CredentialLoginMutation = { __typename?: 'Mutation', credentialLogin: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } };
+
+export type CredentialSignupMutationVariables = Exact<{
+  input: CredentialsSignUpDto;
+}>;
+
+
+export type CredentialSignupMutation = { __typename?: 'Mutation', credentialSignUp: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } };
 
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 

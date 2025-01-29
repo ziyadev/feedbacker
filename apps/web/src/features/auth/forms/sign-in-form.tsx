@@ -1,23 +1,22 @@
 'use client';
-import { useLastLogin } from '@/components/hooks/useLastLogin';
 import { BlurIn } from '@/components/motions/blur-in';
-import { env } from '@/env.mjs';
-import { useAuth } from '@/features/auth/hooks/useAuth';
-import { Badge, Button } from '@feedbacker/ui';
-import { IconLoader } from '@tabler/icons-react';
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
-import { ReactNode, useEffect, useState, useTransition } from 'react';
+import { Button, Input, InputMessage, Label } from '@feedbacker/ui';
+import { ProviderButton } from '../ui/provider-button';
+import { APP_NAME } from '@repo/utils';
+import { useForm } from '@tanstack/react-form'
+import { z } from 'zod';
+import { useLogin } from '../hooks/useLogin';
+import { useAuth } from '../hooks/useAuth';
+import { useToast } from '@/components/hooks';
+import { LoadingIcon } from '@/components/ui/icons/loading-icon';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 export default function SignInForm() {
-  const { isAuthenticated, loading } = useAuth();
-  const searchParams = useSearchParams();
-  if (loading) {
-    return <IconLoader className="mx-2 size-5 animate-spin animate-infinite animate-ease-in-out animate-alternate" />;
-  }
-  if (isAuthenticated) {
-    redirect(searchParams.get('next') || '/overview');
-  }
+
+
   return (
-    <div className="flex w-full flex-col items-start sm:max-w-sm">
+    <BlurIn className="flex w-full flex-col items-start sm:max-w-sm">
+
       <div className="relative flex items-center justify-center rounded-lg bg-white p-3 shadow-lg ring-1 ring-black/5">
         <svg
           fill="none"
@@ -34,16 +33,16 @@ export default function SignInForm() {
       </div>
       <div className="mt-6 flex flex-col">
         <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-          Log in to Insights
+          Log in to {APP_NAME}
         </h1>
         <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
           Don’t have an account?{/* */}{' '}
-          <a
+          <Link
             className="text-blue-500 hover:text-blue-600 dark:text-blue-500 hover:dark:text-blue-400"
-            href="#"
+            href="/auth/sign-up"
           >
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
       <div className="mt-10 w-full">
@@ -101,103 +100,130 @@ export default function SignInForm() {
       </div>
       <p className="text-sm text-gray-700 dark:text-gray-300">
         Forgot your password?{/* */}{' '}
-        <a
+        <Link
           className="text-blue-500 hover:text-blue-600 dark:text-blue-500 hover:dark:text-blue-400"
-          href="#"
+          href="/auth/reset-password"
         >
           Reset password
-        </a>
+        </Link>
       </p>
-    </div>
+
+    </BlurIn>
   );
 }
-export const ProviderButton = ({
-  providerName,
-  icon,
-  label,
-}: {
-  providerName: 'google' | 'github';
-  icon: ReactNode;
-  label: string;
-}) => {
-  const { value, setValue } = useLastLogin();
-  const searchParams = useSearchParams();
-  const status = searchParams.get('status');
-  const redirectedProvider = searchParams.get('provider');
-  const next = searchParams.get('next');
-  const [pending, startTransition] = useTransition();
-  const { replace } = useRouter();
-  const onClick = () => {
-    startTransition(() => {
-      const url = new URL(`${env.NEXT_PUBLIC_API_URL}/auth/${providerName}`);
-      // we pass redirectUri to the api if the next exists so we redirect user directly to the next after sign-in
-      if (next) url.searchParams.set('next', next);
-      url.searchParams.set(
-        'redirectUrl',
-        encodeURI('http://app.localhost.com' + '/overview')
-      );
-      replace(url.toString()); // redirect to the
-    });
-  };
-  const isLoading = pending || redirectedProvider === providerName;
-  useEffect(() => {
-    if (status === 'success' && redirectedProvider === providerName) {
-      setValue(providerName);
-      replace('/overview');
-    }
-  }, [status, redirectedProvider, setValue, next, replace, providerName]);
-  return (
-    <Button
-      disabled={isLoading}
-      variant="secondary"
-      className="relative "
-      onClick={onClick}
-    >
-      {value === providerName && (
-        <Badge className="absolute top-1.2 right-1  " size="xs">
-          Racently used
-        </Badge>
-      )}
-      {isLoading ? (
-        <IconLoader className="mx-2 size-5 animate-spin animate-infinite animate-ease-in-out animate-alternate" />
-      ) : (
-        icon
-      )}
-      {label}
-    </Button>
-  );
-};
+
 
 export const EmailSection = () => {
-  const [show, setShow] = useState(false);
+  const { setUser } = useAuth()
+  const { toast } = useToast()
+  const router = useRouter()
+  const [login, { loading, data }] = useLogin({
+    onSuccess: () => {
+      setUser(data?.credentialLogin ?? null) // set user to the session
+      router.push('/dashboard')
+
+    },
+    onError: (e) => {
+      toast({
+        title: "Error logging in",
+        description: e.message,
+        variant: "error",
+        duration: 7000,
+      });
+    },
+  });
+  const formSchema = z.object({
+    email: z.string().email({ message: "Invalid email address, please type a valid email address" }),
+    password: z.string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+
+      .refine((value) => /[A-Z]/.test(value), {
+        message: "Password must include at least one uppercase letter.",
+      })
+      .refine((value) => /\d/.test(value), {
+        message: "Password must include at least one number.",
+      })
+  })
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await login({
+        variables: {
+          input: value
+        },
+
+      })
+    },
+  })
   return (
     <div className="flex w-full flex-col gap-y-6">
-      {show && (
-        <BlurIn>
-          <div className="flex flex-col gap-y-4 ">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          void form.handleSubmit()
+        }}
+        className="flex flex-col gap-y-4 "
+      >
+        <form.Field
+          name="email"
+        >
+          {(field) => (
             <div className="flex flex-col space-y-2">
-              <label
-                className="text-sm leading-none text-gray-900 dark:text-gray-50 font-medium"
-                tremor-id="tremor-raw"
-                htmlFor="email-form-item"
-              >
-                Email
-              </label>
-              <div className="relative w-full" tremor-id="tremor-raw">
-                <input
-                  type="email"
-                  className="relative block w-full appearance-none rounded-md border px-2.5 py-2 shadow-sm outline-none transition sm:text-sm border-gray-300 dark:border-gray-800 text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-[#090E1A] disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:dark:border-gray-700 disabled:dark:bg-gray-800 disabled:dark:text-gray-500 file:-my-2 file:-ml-2.5 file:cursor-pointer file:rounded-l-[5px] file:rounded-r-none file:border-0 file:px-3 file:py-2 file:outline-none focus:outline-none disabled:pointer-events-none file:disabled:pointer-events-none file:border-solid file:border-gray-300 file:bg-gray-50 file:text-gray-500 file:hover:bg-gray-100 file:dark:border-gray-800 file:dark:bg-gray-950 file:hover:dark:bg-gray-900/20 file:disabled:dark:border-gray-700 file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] file:disabled:bg-gray-100 file:disabled:text-gray-500 file:disabled:dark:bg-gray-800 focus:ring-2 focus:ring-blue-200 focus:dark:ring-blue-700/30 focus:border-blue-500 focus:dark:border-blue-700 [&::--webkit-search-cancel-button]:hidden [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
-                  autoComplete="email"
-                  id="email-form-item"
-                  placeholder="emily.ross@acme.ch"
-                  name="email"
-                />
-              </div>
+              <Label htmlFor={field.name}>Email</Label>
+              <Input
+                placeholder="Enter email"
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                hasError={!!field.state.meta.errors?.length}
+                type="email"
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+              <InputMessage>
+                {field.state.meta.errors ? (
+                  field.state.meta.errors.join(', ')
+                ) : null}
+              </InputMessage>
             </div>
-          </div>
-        </BlurIn>
-      )}
-      <Button onClick={() => setShow(true)}>Continue with Email</Button>
+
+          )}
+        </form.Field>
+        <form.Field
+          name="password"
+        >
+          {(field) => (
+            <div className="flex flex-col space-y-2">
+              <Label htmlFor={field.name}>Password</Label>
+              <Input
+                placeholder="Enter password"
+                type="password"
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                hasError={!!field.state.meta.errors?.length}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+              <InputMessage>
+                {field.state.meta.errors ? (
+                  field.state.meta.errors.join(', ')
+                ) : null}
+              </InputMessage>
+            </div>
+
+          )}
+        </form.Field>
+        <Button type='submit' disabled={loading}>
+          {loading ? <LoadingIcon /> : 'Sign in'}
+        </Button>
+      </form>
+
     </div>
   );
 };
