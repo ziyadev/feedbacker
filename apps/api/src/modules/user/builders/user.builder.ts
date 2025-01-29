@@ -22,6 +22,10 @@ export class UserBuilder {
     this.user.avatar = url;
     return this;
   }
+  setPassword(password: string): UserBuilder {
+    this.user.hashedPassword = password;
+    return this;
+  }
 
   build(): UserEntity {
     return this.user;

@@ -12,11 +12,15 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 import { SessionStrategy } from './strategies/session.strategy';
 import { TokenModule } from '@/modules/token/token.module';
+import { AuthResolver } from './auth.resolver';
+import { CacheModule } from '@nestjs/cache-manager';
+
 @Module({
   imports: [
     PassportModule,
     TokenModule,
     UserModule,
+    CacheModule.register(),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<Env['JWT_SECRET']>('JWT_SECRET'),
@@ -34,6 +38,7 @@ import { TokenModule } from '@/modules/token/token.module';
     GithubStrategy,
     HeaderAPIKeyStrategy,
     SessionStrategy,
+    AuthResolver,
   ],
   exports: [SessionStrategy],
 })

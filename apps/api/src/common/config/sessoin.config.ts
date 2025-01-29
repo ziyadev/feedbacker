@@ -1,5 +1,6 @@
 import { CookieOptions } from 'express';
 import _session from 'express-session';
+import { HOST_NAME } from '@repo/utils';
 import { redisStore } from './redis-store.config';
 export interface UserSessionData {
   id: string;
@@ -19,8 +20,9 @@ declare module 'express-session' {
 export const sessionCookieConfig: CookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
+  domain: process.env.NODE_ENV === 'production' ? `.${HOST_NAME}` : undefined,
   maxAge: 1000 * 60 * 60 * 24 * 90, // 90 days
-  sameSite: 'lax',
+  sameSite: 'strict',
 };
 
 export const sessionConfig = {

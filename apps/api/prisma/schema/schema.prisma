@@ -17,6 +17,8 @@ model User {
   avatar        String?
   lockedAt      DateTime?
 
+  hashedPassword String?
+
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt @default(now())
   subscribed       Boolean  @default(true) // email subscription
@@ -60,4 +62,11 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
 }

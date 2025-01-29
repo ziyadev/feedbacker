@@ -1,6 +1,6 @@
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 export const corsConfig = {
-  origin: ['http://localhost:4000', 'http://app.localhost.com'],
+  origin: [process.env.PUBLIC_BASE_APP_ORIGIN],
   credentials: true,
 } satisfies CorsOptions;

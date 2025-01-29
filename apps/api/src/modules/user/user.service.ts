@@ -4,9 +4,9 @@ import { AccountBuilder } from './builders/account.builder';
 import { UserBuilder } from './builders/user.builder';
 import { CreateUserWithAccountDto } from './dto/create-user-with-account.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { AccountService } from './services/account.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -48,6 +48,7 @@ export class UserService {
       .setEmail(userDto.email)
       .setName(userDto.name)
       .setAvatar(userDto.avatar)
+      .setPassword(userDto.hashedPassword)
       .build();
     return await this.userRepository.create({
       data: user,
@@ -67,7 +68,6 @@ export class UserService {
         .setAvatar(avatar)
         .setEmail(email, emailVerified)
         .setName(name)
-
         .build();
 
       // Create the user in the database

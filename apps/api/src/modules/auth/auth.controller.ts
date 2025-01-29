@@ -45,9 +45,4 @@ export class AuthController {
   async signOut(@Req() req: Request) {
     return req.session.destroy(() => console.log('session destroyed'));
   }
-
-  @Get('__csrf')
-  async csrf(@Req() req: Request, @Res() res: Response) {
-    return { csrfToken: generateToken(req, res) };
-  }
 }
