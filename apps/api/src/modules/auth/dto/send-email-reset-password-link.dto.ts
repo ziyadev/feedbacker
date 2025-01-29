@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class SendEmailResetPasswordLinkDto {
-  @Field()
+  @Field(() => String, { description: 'Email address' })
   @IsEmail()
   @IsNotEmpty()
   email: string;

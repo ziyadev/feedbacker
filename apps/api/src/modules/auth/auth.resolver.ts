@@ -1,28 +1,26 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { AuthService } from './auth.service';
-import { Csrf } from '@/common/decorators/csrf.decorator';
-import { UserModel } from '../user/models/user.model';
-import { CredentialsLoginDto } from './dto/credentials-login.dto';
 import { Session } from '@/common/decorators/session.decorator';
-import { CredentialsSignUpDto } from './dto/credentials-signup.dto';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { SessionData } from 'express-session';
 import { UserMapper } from '../user/mappers/user.mapper';
-import { SendEmailResetPasswordLinkDto } from './dto/send-email-reset-password-link.dto';
-import { CheckResetPasswordTokenDto } from './dto/check-reset-password-token.dto';
+import { UserModel } from '../user/models/user.model';
+import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CheckResetPasswordTokenDto } from './dto/check-reset-password-token.dto';
+import { CredentialsLoginDto } from './dto/credentials-login.dto';
+import { CredentialsSignUpDto } from './dto/credentials-signup.dto';
+import { SendEmailResetPasswordLinkDto } from './dto/send-email-reset-password-link.dto';
+import { CredentialsLoginModel } from './models/credentials-login.model';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => UserModel)
+  @Mutation(() => CredentialsLoginModel)
   async credentialLogin(
     @Args('input') input: CredentialsLoginDto,
     @Session() session: SessionData
-  ) {
-    const user = await this.authService.handleCredentialsLogin(input);
-    this.authService.saveSession(session, user);
-    return UserMapper.toModel(user);
+  ): Promise<CredentialsLoginModel> {
+    return this.authService.handleCredentialsLogin(input, session);
   }
   @Mutation(() => UserModel)
   async credentialSignUp(

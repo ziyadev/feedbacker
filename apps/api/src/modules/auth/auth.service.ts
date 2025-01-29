@@ -1,36 +1,34 @@
-import { UserSessionData } from '@/common/config/sessoin.config';
+import { Env } from '@/common/config/env';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { SendEmailLoginLinkDto } from './dto/send-email-login-link.dto';
-import { UserModel } from '../user/models/user.model';
-import { EmailService } from '../email/email.service';
-import { TokenService } from '../token/token.service';
 import { ConfigService } from '@nestjs/config';
 import { normalizeString } from '@repo/utils';
-import { Env } from '@/common/config/env';
-import { UserEntity } from '../user/entities/user.entity';
-import { AuthProvider, OAuthUser } from './interface/auth.interface';
-import { CredentialsLoginDto } from './dto/credentials-login.dto';
-import { passwordCompare, passwordHash } from './utils/password-hash';
-import { SessionData } from 'express-session';
-import { CredentialsSignUpDto } from './dto/credentials-signup.dto';
-import { SendEmailResetPasswordLinkDto } from './dto/send-email-reset-password-link.dto';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { SessionData } from 'express-session';
+import { EmailService } from '../email/email.service';
+import { TokenService } from '../token/token.service';
+import { UserEntity } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 import {
   MAX_RESET_PASSWORD_ATTEMPTS,
   MAX_RESET_PASSWORD_ATTEMPTS_TIME,
 } from './auth.constant';
-import { CheckResetPasswordTokenDto } from './dto/check-reset-password-token.dto';
+import { CredentialsLoginErrorBuilder } from './builders/credentials-login-error.builder';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CheckResetPasswordTokenDto } from './dto/check-reset-password-token.dto';
+import { CredentialsLoginDto } from './dto/credentials-login.dto';
+import { CredentialsSignUpDto } from './dto/credentials-signup.dto';
+import { SendEmailLoginLinkDto } from './dto/send-email-login-link.dto';
+import { SendEmailResetPasswordLinkDto } from './dto/send-email-reset-password-link.dto';
+import { AuthProvider, OAuthUser } from './interface/auth.interface';
+import { CredentialsLoginModel } from './models/credentials-login.model';
+import { passwordCompare, passwordHash } from './utils/password-hash';
 @Injectable()
 export class AuthService {
   constructor(
@@ -100,37 +98,64 @@ export class AuthService {
       throw new InternalServerErrorException(e.message);
     }
   }
-  async handleCredentialsLogin(dto: CredentialsLoginDto): Promise<UserEntity> {
-    const user = await this.userService.findByEmail({
-      email: normalizeString(dto.email),
-    });
-    const throttleTtl = Math.floor(Math.random() * 1000);
-    if (!user || !user.hashedPassword) {
-      /**
-       * maxWaitTime and minWaitTime(millisecond) are used to mimic the delay for server response times
-       * received for existing users flow
-       */
-      const maxWaitTime = 2000;
-      const minWaitTime = 100;
-      const randomWaitTime = Math.floor(
-        Math.random() * (maxWaitTime - minWaitTime) + minWaitTime
+  async handleCredentialsLogin(
+    dto: CredentialsLoginDto,
+    session: SessionData
+  ): Promise<CredentialsLoginModel> {
+    const errors = new CredentialsLoginErrorBuilder();
+    const normalizedEmail = normalizeString(dto.email);
+
+    const LOGIN_DELAY = {
+      MIN: 100,
+      MAX: 2000,
+    };
+
+    const simulateLoginDelay = async () => {
+      const randomDelay = Math.floor(
+        Math.random() * (LOGIN_DELAY.MAX - LOGIN_DELAY.MIN) + LOGIN_DELAY.MIN
       );
-      await new Promise((resolve) => {
-        setTimeout(resolve, randomWaitTime);
-      }); // will wait randomly for the chosen time to sync response time
-      throw new UnauthorizedException('Email or password is incorrect');
+      await new Promise((resolve) => setTimeout(resolve, randomDelay));
+    };
+    const handleInvalidCredentials = async () => {
+      await simulateLoginDelay();
+      errors.setInvalidCredentialsError();
+      return {
+        user: null,
+        errors: errors.build(),
+      };
+    };
+    const user = await this.userService.findByEmail({ email: normalizedEmail });
+
+    /* if user not found or no password */
+    if (!user?.hashedPassword) {
+      return handleInvalidCredentials();
     }
 
-    const passwordMatch = await passwordCompare(
+    const isPasswordValid = await passwordCompare(
       dto.password,
       user.hashedPassword
     );
-    if (!passwordMatch) {
-      setTimeout(() => {
-        throw new UnauthorizedException('Email or password is incorrect');
-      }, throttleTtl);
+
+    /* if password not valid */
+    if (!isPasswordValid) {
+      return handleInvalidCredentials();
     }
-    return user;
+
+    const sessionData = {
+      id: user.id,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      rules: [],
+      permissions: [],
+      planId: '',
+    };
+
+    this.saveSession(session, sessionData);
+
+    return {
+      user,
+      errors: errors.build(),
+    };
   }
   async handleCredentialsSignUp(
     dto: CredentialsSignUpDto
@@ -168,7 +193,6 @@ export class AuthService {
       const userAttempts =
         (await this.cacheManager.get<number>(normalizedEmail)) ?? 0;
 
-      console.log(userAttempts);
       if (userAttempts >= MAX_RESET_PASSWORD_ATTEMPTS) {
         throw new ForbiddenException(
           'You have reached the maximum number of reset password attempts'
@@ -176,7 +200,6 @@ export class AuthService {
       }
 
       const ttl = await this.cacheManager.ttl(normalizedEmail);
-      console.log(ttl);
       await this.cacheManager.set(
         normalizedEmail,
         userAttempts + 1, // Increment user attempts
@@ -201,7 +224,6 @@ export class AuthService {
       throw new InternalServerErrorException(e.message);
     }
   }
-
   async handleCheckResetPasswordToken({
     token,
   }: CheckResetPasswordTokenDto): Promise<boolean> {
@@ -218,7 +240,7 @@ export class AuthService {
     });
     return true;
   }
-  saveSession(session: SessionData, user: UserEntity) {
+  saveSession(session: SessionData, user: SessionData['user']) {
     session.user = {
       id: user.id,
       email: user.email,

@@ -2,7 +2,6 @@ import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { GithubOAuthGuard } from './guard/github.guard';
 import { GoogleOAuthGuard } from './guard/google.guard';
-import { generateToken } from '@/common/config/csrf.config';
 import { buildOauthRedirectUrl } from './utils/build-oauth-redirect-url';
 import { Session } from '@/common/decorators/session.decorator';
 
