@@ -3,8 +3,12 @@ interface Error {
   message: string;
 }
 
-export class AbstractErrorsBuilder<T extends Error, K extends string> {
+export class AbstractErrorsBuilder<T extends Error, K extends Error['code']> {
   public errors = new Map<K, T>();
+
+  hasErrors(): boolean {
+    return this.errors.size > 0;
+  }
   addError(error: T): AbstractErrorsBuilder<T, K> {
     this.errors.set(error.code as K, error);
     return this;

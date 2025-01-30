@@ -9,7 +9,7 @@ export class CredentialsLoginErrorBuilder extends AbstractErrorsBuilder<
   CredentialsLoginErrorCode
 > {
   setInvalidCredentialsError(message?: string) {
-    this.errors.set(CredentialsLoginErrorCode.INVALID_CREDENTIALS, {
+    this.addError({
       code: CredentialsLoginErrorCode.INVALID_CREDENTIALS,
       message: message || 'Invalid credentials',
     });
