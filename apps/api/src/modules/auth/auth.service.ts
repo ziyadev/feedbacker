@@ -15,6 +15,7 @@ import { EmailService } from '../email/email.service';
 import { TokenService } from '../token/token.service';
 import { UserBuilder } from '../user/builders/user.builder';
 import { UserEntity } from '../user/entities/user.entity';
+import { UserMapper } from '../user/mappers/user.mapper';
 import { UserService } from '../user/user.service';
 import {
   MAX_RESET_PASSWORD_ATTEMPTS,
@@ -133,7 +134,7 @@ export class AuthService {
 
     this.saveSession(session, sessionData);
     return MutateResultFactory.ok({
-      user,
+      user:UserMapper.toModel(user),
     });
   }
   /* handle credentials signup */
@@ -179,8 +180,9 @@ export class AuthService {
         planId: '',
       };
       this.saveSession(session, sessionData);
+      const newUser = await this.userService.create(user);
       return MutateResultFactory.ok({
-        user: await this.userService.create(user),
+        user: UserMapper.toModel(newUser),
       });
     } catch (e) {
       this.logger.error(e);

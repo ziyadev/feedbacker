@@ -1,50 +1,18 @@
 'use client';
-import { BlurIn } from '@/components/motions/blur-in';
-import { Button, Input, InputMessage, Label } from '@feedbacker/ui';
-import { ProviderButton } from '../ui/provider-button';
-import { APP_NAME } from '@repo/utils';
-import { useForm } from '@tanstack/react-form'
-import { z } from 'zod';
-import { useLogin } from '../hooks/useLogin';
-import { useAuth } from '../hooks/useAuth';
-import { useToast } from '@/components/hooks';
+import { useLastLogin } from '@/components/hooks/useLastLogin';
 import { LoadingIcon } from '@/components/ui/icons/loading-icon';
+import { CredentialsLoginErrorCode } from '@/graphql/types';
+import { useMutation } from '@apollo/client';
+import { Button, Input, InputMessage, Label } from '@feedbacker/ui';
+import { useForm } from '@tanstack/react-form';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { z } from 'zod';
+import { CREDENTIALS_LOGIN } from '../api/mutations';
+import { ProviderButton } from '../ui/provider-button';
 export default function SignInForm() {
-
-
   return (
-    <BlurIn className="flex w-full flex-col items-start sm:max-w-sm">
-
-      <div className="relative flex items-center justify-center rounded-lg bg-white p-3 shadow-lg ring-1 ring-black/5">
-        <svg
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 48 44"
-          className="size-8 text-blue-500 dark:text-blue-500"
-          aria-label="Insights logo"
-        >
-          <path
-            strokeWidth={5}
-            d="M32.5 33L32.5 11C32.5 6.30558 28.6944 2.5 24 2.5C19.3056 2.5 15.5 6.30558 15.5 11L15.5 33C15.5 37.6944 19.3056 41.5 24 41.5C28.6944 41.5 32.5 37.6944 32.5 33Z"
-          />
-        </svg>
-      </div>
-      <div className="mt-6 flex flex-col">
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-          Log in to {APP_NAME}
-        </h1>
-        <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-          Don’t have an account?{/* */}{' '}
-          <Link
-            className="text-blue-500 hover:text-blue-600 dark:text-blue-500 hover:dark:text-blue-400"
-            href="/auth/sign-up"
-          >
-            Sign up
-          </Link>
-        </p>
-      </div>
+    <>
       <div className="mt-10 w-full">
         <div className="gap-2 grid">
           <ProviderButton
@@ -82,71 +50,47 @@ export default function SignInForm() {
             }
           />
         </div>
-        <div
-          className="mx-auto flex w-full items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-500 my-4"
-          tremor-id="tremor-raw"
-        >
+        <div className="mx-auto flex w-full items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-500 my-4">
           <div className="h-[1px] w-full bg-gray-200 dark:bg-gray-800" />
           <div className="whitespace-nowrap text-inherit">or</div>
           <div className="h-[1px] w-full bg-gray-200 dark:bg-gray-800" />
         </div>
         <EmailSection />
       </div>
-      <div
-        className="mx-auto my-6 flex w-full items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-500"
-        tremor-id="tremor-raw"
-      >
-        <div className="h-[1px] w-full bg-gray-200 dark:bg-gray-800" />
-      </div>
-      <p className="text-sm text-gray-700 dark:text-gray-300">
-        Forgot your password?{/* */}{' '}
-        <Link
-          className="text-blue-500 hover:text-blue-600 dark:text-blue-500 hover:dark:text-blue-400"
-          href="/auth/reset-password"
-        >
-          Reset password
-        </Link>
-      </p>
-
-    </BlurIn>
+      <SignInFormFooter />
+    </>
   );
 }
 
-
 export const EmailSection = () => {
-  const { setUser } = useAuth()
-  const { toast } = useToast()
-  const router = useRouter()
-  const [login, { loading, data }] = useLogin({
-    onSuccess: () => {
-      setUser(data?.credentialLogin ?? null) // set user to the session
-      router.push('/dashboard')
-
-    },
-    onError: (e) => {
-      toast({
-        title: "Error logging in",
-        description: e.message,
-        variant: "error",
-        duration: 7000,
-      });
-    },
-  });
+  const router = useRouter();
+  const { setValue } = useLastLogin();
+  const errorMessages: { [key: string]: string } = {
+    [CredentialsLoginErrorCode.InvalidCredentials]:
+      'Your email or password is incorrect',
+  };
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next');
   const formSchema = z.object({
-    email: z.string().email({ message: "Invalid email address, please type a valid email address" }),
-    password: z.string()
-      .min(8, { message: "Password must be at least 8 characters long" })
-
+    email: z.string().email({
+      message: 'Invalid email address, please type a valid email address',
+    }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .refine((value) => /[@#$%^&*()_+!]/.test(value), {
+        message: 'Password must include at least one special character.',
+      })
       .refine((value) => /[A-Z]/.test(value), {
-        message: "Password must include at least one uppercase letter.",
+        message: 'Password must include at least one uppercase letter.',
       })
       .refine((value) => /\d/.test(value), {
-        message: "Password must include at least one number.",
-      })
-  })
+        message: 'Password must include at least one number.',
+      }),
+  });
   const form = useForm({
     defaultValues: {
-      email: '',
+      email: searchParams.get('email') || '',
       password: '',
     },
     validators: {
@@ -155,25 +99,44 @@ export const EmailSection = () => {
     onSubmit: async ({ value }) => {
       await login({
         variables: {
-          input: value
+          input: value,
         },
-
-      })
+      });
     },
-  })
+  });
+  const [login, { loading }] = useMutation(CREDENTIALS_LOGIN, {
+    onCompleted: ({ credentialsLogin: { user, errors } }) => {
+      if (!errors) {
+        // check if there are no errors
+        setValue('credentials');
+        router.push(next || '/dashboard');
+        return;
+      }
+      for (const error of errors) {
+        // if the error code is invalid credentials, set the error message
+        if (error.code === CredentialsLoginErrorCode.InvalidCredentials) {
+          form.setFieldMeta('password', (prev) => ({
+            ...prev,
+            errorMap: {
+              onSubmit: errorMessages[error.code],
+            },
+          }));
+        }
+      }
+    },
+  });
+
   return (
     <div className="flex w-full flex-col gap-y-6">
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          void form.handleSubmit()
+          e.preventDefault();
+          e.stopPropagation();
+          void form.handleSubmit();
         }}
         className="flex flex-col gap-y-4 "
       >
-        <form.Field
-          name="email"
-        >
+        <form.Field name="email">
           {(field) => (
             <div className="flex flex-col space-y-2">
               <Label htmlFor={field.name}>Email</Label>
@@ -187,17 +150,14 @@ export const EmailSection = () => {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
               <InputMessage>
-                {field.state.meta.errors ? (
-                  field.state.meta.errors.join(', ')
-                ) : null}
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(', ')
+                  : null}
               </InputMessage>
             </div>
-
           )}
         </form.Field>
-        <form.Field
-          name="password"
-        >
+        <form.Field name="password">
           {(field) => (
             <div className="flex flex-col space-y-2">
               <Label htmlFor={field.name}>Password</Label>
@@ -211,19 +171,36 @@ export const EmailSection = () => {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
               <InputMessage>
-                {field.state.meta.errors ? (
-                  field.state.meta.errors.join(', ')
-                ) : null}
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(', ')
+                  : null}
               </InputMessage>
             </div>
-
           )}
         </form.Field>
-        <Button type='submit' disabled={loading}>
+        <Button type="submit" disabled={loading}>
           {loading ? <LoadingIcon /> : 'Sign in'}
         </Button>
       </form>
-
     </div>
+  );
+};
+
+const SignInFormFooter = () => {
+  return (
+    <>
+      <div className="mx-auto my-6 flex w-full items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-500">
+        <div className="h-[1px] w-full bg-gray-200 dark:bg-gray-800" />
+      </div>
+      <p className="text-sm text-gray-700 dark:text-gray-300">
+        Forgot your password?{/* */}{' '}
+        <Link
+          className="text-blue-500 hover:text-blue-600 dark:text-blue-500 hover:dark:text-blue-400"
+          href="/auth/reset-password"
+        >
+          Reset password
+        </Link>
+      </p>
+    </>
   );
 };

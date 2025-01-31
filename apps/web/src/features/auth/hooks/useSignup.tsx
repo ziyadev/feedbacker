@@ -9,12 +9,5 @@ export const useSignup = ({
       onError?: (e: ApolloError) => void;
 }) => {
 
-      return useMutation(CREDENTIALS_SIGN_UP, {
-            onCompleted: () => {
-                  onSuccess?.()
-            },
-            onError: (e) => {
-                  onError?.(e)
-            },
-      })
+      return
 };

@@ -29,19 +29,60 @@ export type CredentialsLoginDto = {
   password: Scalars['String']['input'];
 };
 
+export type CredentialsLoginError = {
+  __typename?: 'CredentialsLoginError';
+  code: CredentialsLoginErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum CredentialsLoginErrorCode {
+  InvalidCredentials = 'INVALID_CREDENTIALS'
+}
+
+export type CredentialsLoginModel = {
+  __typename?: 'CredentialsLoginModel';
+  /** Credentials Login error */
+  errors?: Maybe<Array<CredentialsLoginError>>;
+  /** User */
+  user?: Maybe<UserModel>;
+};
+
 export type CredentialsSignUpDto = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
+export type CredentialsSignUpError = {
+  __typename?: 'CredentialsSignUpError';
+  code: CredentialsSignUpErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum CredentialsSignUpErrorCode {
+  UserExists = 'USER_EXISTS'
+}
+
+export type CredentialsSignUpModel = {
+  __typename?: 'CredentialsSignUpModel';
+  /** Credentials SignUp error */
+  errors?: Maybe<Array<CredentialsSignUpError>>;
+  /** User */
+  user?: Maybe<UserModel>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Changes user password using a valid reset token */
   changePassword: Scalars['Boolean']['output'];
+  /** Validates if a password reset token is valid and not expired */
   checkResetPasswordToken: Scalars['Boolean']['output'];
-  credentialLogin: UserModel;
-  credentialSignUp: UserModel;
-  sendResetPasswordLink: Scalars['Boolean']['output'];
+  /** Authenticates a user with credentials and returns user information */
+  credentialsLogin: CredentialsLoginModel;
+  /** Creates a new user account with the provided credentials and returns user information */
+  credentialsSignUp: CredentialsSignUpModel;
+  /** Sends a password reset link to the provided email address */
+  sendResetPasswordLink: SendResetPasswordEmailModel;
 };
 
 
@@ -55,12 +96,12 @@ export type MutationCheckResetPasswordTokenArgs = {
 };
 
 
-export type MutationCredentialLoginArgs = {
+export type MutationCredentialsLoginArgs = {
   input: CredentialsLoginDto;
 };
 
 
-export type MutationCredentialSignUpArgs = {
+export type MutationCredentialsSignUpArgs = {
   input: CredentialsSignUpDto;
 };
 
@@ -76,7 +117,26 @@ export type Query = {
 };
 
 export type SendEmailResetPasswordLinkDto = {
+  /** Email address */
   email: Scalars['String']['input'];
+};
+
+export type SendResetPasswordEmailError = {
+  __typename?: 'SendResetPasswordEmailError';
+  code: SendResetPasswordEmailErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum SendResetPasswordEmailErrorCode {
+  EmailNotFound = 'EMAIL_NOT_FOUND',
+  MaxResetAttemptsExceeded = 'MAX_RESET_ATTEMPTS_EXCEEDED'
+}
+
+export type SendResetPasswordEmailModel = {
+  __typename?: 'SendResetPasswordEmailModel';
+  errors?: Maybe<Array<SendResetPasswordEmailError>>;
+  /** Success flag */
+  success?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type UserModel = {
@@ -97,19 +157,26 @@ export type UserModel = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type CredentialLoginMutationVariables = Exact<{
+export type CredentialsLoginMutationVariables = Exact<{
   input: CredentialsLoginDto;
 }>;
 
 
-export type CredentialLoginMutation = { __typename?: 'Mutation', credentialLogin: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } };
+export type CredentialsLoginMutation = { __typename?: 'Mutation', credentialsLogin: { __typename?: 'CredentialsLoginModel', user?: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } | null, errors?: Array<{ __typename?: 'CredentialsLoginError', code: CredentialsLoginErrorCode, message: string }> | null } };
 
-export type CredentialSignupMutationVariables = Exact<{
+export type CredentialsSignUpMutationVariables = Exact<{
   input: CredentialsSignUpDto;
 }>;
 
 
-export type CredentialSignupMutation = { __typename?: 'Mutation', credentialSignUp: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } };
+export type CredentialsSignUpMutation = { __typename?: 'Mutation', credentialsSignUp: { __typename?: 'CredentialsSignUpModel', user?: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } | null, errors?: Array<{ __typename?: 'CredentialsSignUpError', code: CredentialsSignUpErrorCode, message: string }> | null } };
+
+export type SendResetPasswordLinkMutationVariables = Exact<{
+  input: SendEmailResetPasswordLinkDto;
+}>;
+
+
+export type SendResetPasswordLinkMutation = { __typename?: 'Mutation', sendResetPasswordLink: { __typename?: 'SendResetPasswordEmailModel', success?: boolean | null, errors?: Array<{ __typename?: 'SendResetPasswordEmailError', code: SendResetPasswordEmailErrorCode, message: string }> | null } };
 
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 

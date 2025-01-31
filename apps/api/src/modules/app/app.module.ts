@@ -1,16 +1,16 @@
-import { Module, ValidationPipe } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { envValidation } from '@/common/config/env';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { DatabaseModule } from '@/modules/database/database.module';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UserModule } from '@/modules/user/user.module';
 import { EmailModule } from '@/modules/email/email.module';
 import { TokenModule } from '@/modules/token/token.module';
+import { UserModule } from '@/modules/user/user.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { BadRequestException, Module, ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 @Module({
   imports: [
     DatabaseModule,
@@ -36,7 +36,18 @@ import { APP_PIPE } from '@nestjs/core';
     AppService,
     {
       provide: APP_PIPE,
-      useFactory: () => new ValidationPipe({ transform: true }),
+      useFactory: () =>
+        new ValidationPipe({
+          transform: true,
+          exceptionFactory: (errors) => {
+            return new BadRequestException(
+              errors.map((error) => ({
+                ...error,
+                messages: Object.values(error.constraints),
+              }))
+            );
+          },
+        }),
     },
   ],
 })
