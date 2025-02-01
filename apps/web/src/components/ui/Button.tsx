@@ -1,18 +1,17 @@
 'use client';
 // Tremor Button [v0.2.0]
 
-import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { RiLoader2Fill } from '@remixicon/react';
+import React from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
-import { cx } from '@/lib/utils';
-import { focusRing } from '@/lib/utils';
+import { cx, focusRing } from '@/lib/utils';
 
 const buttonVariants = tv({
   base: [
     // base
-    'relative inline-flex items-center justify-center whitespace-nowrap rounded-md border px-3 py-2 text-center text-sm font-medium shadow-sm transition-all duration-100 ease-in-out',
+    'relative inline-flex items-center justify-center whitespace-nowrap rounded-md border px-3 py-2 text-center text-sm font-medium shadow-sm transition-all duration-300 ease-in-out active:scale-[0.990]',
     // disabled
     'disabled:pointer-events-none disabled:shadow-none',
     // focus
@@ -122,7 +121,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={forwardedRef}
         className={cx(buttonVariants({ variant }), className)}
         disabled={disabled || isLoading}
-        tremor-id="tremor-raw"
         {...props}
       >
         {isLoading ? (
