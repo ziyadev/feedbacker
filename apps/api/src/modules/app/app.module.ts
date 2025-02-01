@@ -9,6 +9,7 @@ import { BadRequestException, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
+import { WorkspaceModule } from '../workspace/workspace.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 @Module({
@@ -30,6 +31,7 @@ import { AppService } from './app.service';
     AuthModule,
     UserModule,
     TokenModule,
+    WorkspaceModule,
   ],
   controllers: [AppController],
   providers: [
