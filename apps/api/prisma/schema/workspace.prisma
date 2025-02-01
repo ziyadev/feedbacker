@@ -1,26 +1,52 @@
 model Workspace {
-  id               String            @id @default(cuid())
-  name             String
-  avatar           String?
-  ownerId          String
-  owner            User              @relation(fields: [ownerId], references: [id])
-  slug             String            @unique
-  description      String?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  workspaceMembers WorkspaceMember[]
-  feedbacks        Feedback[]
+  id                   String                @id @default(cuid())
+  name                 String
+  avatar               String?
+  ownerId              String
+  owner                User                  @relation(fields: [ownerId], references: [id])
+  slug                 String                @unique
+  description          String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  workspaceMembers     WorkspaceMember[]
+  workspaceInvitations WorkspaceInvitation[]
+  feedbacks            Feedback[]
 
   @@index([ownerId])
 }
 
+enum WorkspaceMemberRole {
+  member
+  admin
+}
+
 model WorkspaceMember {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   workspaceId String
   userId      String
   permissions String[] // ex: ["feedback:read", "feedback:write","feedback:delete"]
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
+
+  role      WorkspaceMemberRole @default(member)
+  workspace Workspace           @relation(fields: [workspaceId], references: [id])
+  user      User                @relation(fields: [userId], references: [id])
+
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+enum WorkspaceInvitationStatus {
+  pending
+  accepted
+  rejected
+}
+
+model WorkspaceInvitation {
+  id          String                    @id @default(cuid())
+  workspaceId String
+  status      WorkspaceInvitationStatus @default(pending)
+  userId      String
+  workspace   Workspace                 @relation(fields: [workspaceId], references: [id])
+  user        User                      @relation(fields: [userId], references: [id])
 
   @@index([workspaceId])
   @@index([userId])

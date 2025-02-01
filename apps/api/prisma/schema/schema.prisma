@@ -20,17 +20,18 @@ model User {
   hashedPassword String?
 
   createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
   subscribed       Boolean  @default(true) // email subscription
   source           String? // where the user came from
   defaultWorkspace String? // slug of the user's default workspace
   referralLinkId   String? // this user's referral link ID
 
   // relational data
-  accounts         Account[]
-  sessions         Session[]
-  workspaces       Workspace[]
-  workspaceMembers WorkspaceMember[]
+  accounts             Account[]
+  sessions             Session[]
+  workspaces           Workspace[]
+  workspaceMembers     WorkspaceMember[]
+  workspaceInvitations WorkspaceInvitation[]
 
   @@index(source)
   @@index(defaultWorkspace)
@@ -63,10 +64,11 @@ model Session {
 
   @@index([userId])
 }
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
