@@ -77,7 +77,7 @@ export class WorkspaceService {
           slug: input.slug,
         },
       });
-      return !!findWorkspace;
+      return !findWorkspace;
     } catch (e) {
       this.logger.error('Error finding workspace', e);
       throw new InternalServerErrorException('Something went wrong');

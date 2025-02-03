@@ -1,0 +1,47 @@
+enum MediaType {
+  image
+  video
+}
+
+model Media {
+  id   String    @id @default(cuid())
+  type MediaType
+
+  // meta data
+  name String?
+  key  String?
+  size Int?
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mediaVideos MediaVideo[]
+  mediaImages MediaImage[]
+
+  @@index([workspaceId])
+}
+
+model MediaVideo {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  thumbnailKey String
+  media        Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId      String
+
+  @@index([mediaId])
+}
+
+model MediaImage {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   String
+
+  @@index([mediaId])
+}

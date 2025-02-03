@@ -11,6 +11,7 @@ model Workspace {
   workspaceMembers     WorkspaceMember[]
   workspaceInvitations WorkspaceInvitation[]
   feedbacks            Feedback[]
+  medias               Media[]
 
   @@index([ownerId])
 }

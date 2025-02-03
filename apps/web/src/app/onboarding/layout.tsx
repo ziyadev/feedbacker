@@ -2,43 +2,33 @@
 import useScroll from '@/components/lib/useScroll';
 import { Button } from '@/components/ui';
 import { LogoLink } from '@/components/ui/logo-link';
+import { Step, onboardingSteps } from '@/features/onboading/hooks/useOnbording';
 import { cx } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-interface Step {
-  name: string;
-  href: string;
-}
-
-const steps: Step[] = [
-  { name: 'Create workspace', href: '/onboarding/workspace' },
-  { name: 'Company', href: '/onboarding/company' },
-  { name: 'Team', href: '/onboarding/team' },
-  { name: 'Finish', href: '/onboarding/finish' },
-];
-
 interface StepProgressProps {
-  steps: Step[];
+  onboardingSteps: Step[];
 }
 
-const StepProgress = ({ steps }: StepProgressProps) => {
+const StepProgress = ({ onboardingSteps }: StepProgressProps) => {
   const pathname = usePathname();
-  const currentStepIndex = steps.findIndex((step) =>
+  const currentStepIndex = onboardingSteps.findIndex((step) =>
     pathname.startsWith(step.href)
   );
 
   return (
     <div aria-label="Onboarding progress">
       <ol className="mx-auto flex w-24 flex-nowrap gap-1 md:w-fit">
-        {steps.map((step, index) => (
+        {onboardingSteps.map((step, index) => (
           <li
             key={step.name}
             className={cx(
-              'h-1 w-12 rounded-full',
-              index <= currentStepIndex
+              'h-1 w-6 rounded-full',
+              index < currentStepIndex
                 ? 'bg-blue-500'
-                : 'bg-gray-300 dark:bg-gray-700'
+                : 'bg-gray-300 dark:bg-gray-700',
+              index === currentStepIndex && 'bg-gray-950 dark:bg-white w-12'
             )}
           >
             <span className="sr-only">
@@ -83,7 +73,7 @@ const Layout = ({
             Insights
           </span>
         </div>
-        <StepProgress steps={steps} />
+        <StepProgress onboardingSteps={onboardingSteps} />
         <Button variant="ghost" className="ml-auto w-fit" asChild>
           <a href="/reports">Skip to dashboard</a>
         </Button>

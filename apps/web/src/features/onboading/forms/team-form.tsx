@@ -6,42 +6,94 @@ import {
     SelectContent,
     SelectItem,
     SelectTrigger,
-    SelectValue,
+    SelectValue
 } from '@/components/ui';
+import { useForm } from '@tanstack/react-form';
 import Link from 'next/link';
-
+import { v4 as uuid } from 'uuid';
+import { z } from 'zod';
 const roles = [
   { label: 'Admin', value: 'admin' },
   { label: 'Editor', value: 'editor' },
   { label: 'Viewer', value: 'viewer' },
 ];
 export default function TeamForm() {
+  const formSchema = z.object({
+    invitations: z.array(
+      z.object({
+        email: z.string().email(),
+        id: z.string(),
+        role: z.enum(['admin', 'editor', 'viewer']),
+      })
+    ),
+  });
+  const form = useForm({
+    defaultValues: {
+      invitations: [
+        {
+          email: '',
+          role: 'admin',
+          id: uuid(),
+        },
+      ],
+    },
+    validators: {
+      onChange: formSchema,
+    },
+    onSubmit: async ({ value }) => {},
+  });
   return (
     <form onSubmit={() => true} className="mt-4 space-y-3">
-      <div className="mx-auto space-y-3">
-        <Label htmlFor="email">Email addresses</Label>
-        <div className="grid grid-cols-12 gap-2  p-1">
-            <Input
-            className="col-span-8 relative"
-              placeholder="Enter an email address"
-              type="email"
-              id="email"
-            />
+      <form.Field name="invitations" mode="array">
+        {(field) =>
+          field.state.value.map((item, index) => (
+            <div key={item.id} className="mx-auto space-y-3">
+              <Label>Email addresses</Label>
+              <div className="grid grid-cols-12 gap-2  p-1">
+                <form.Field key={index} name={`invitations[${index}].email`}>
+                  {(subField) => (
+                    <Input
+                      className="col-span-8 relative"
+                      placeholder="Enter an email address"
+                      id={subField.name}
+                      type="email"
+                      name={subField.name}
+                      value={subField.state.value}
+                      hasError={!!subField.state.meta.errors?.length}
+                      onChange={(e) => subField.handleChange(e.target.value)}
+                    />
+                  )}
+                </form.Field>
+                <form.Field key={index} name={`invitations[${index}].role`}>
+                  {(subField) => (
+                    <Select
+                      name={subField.name}
+                      value={subField.state.value}
+                      onValueChange={(e) => subField.handleChange(e)}
+                    >
+                      <SelectTrigger
+                        id={subField.name}
+                        hasError={!!subField.state.meta.errors?.length}
+                        className="col-span-4"
+                      >
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roles.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </form.Field>
+              </div>
 
-          <Select>
-            <SelectTrigger className="col-span-4">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {roles.map((item) => (
-                <SelectItem key={item.value} value={item.value}>
-                  {item.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+            </div>
+          ))
+        }
+      </form.Field>
 
       <div className="mt-6 grid space-y-3">
         <Button

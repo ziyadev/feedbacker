@@ -18,7 +18,10 @@ const documents = {
     "\n  mutation CredentialsSignUp($input: CredentialsSignUpDto!) {\n      credentialsSignUp(input: $input) {\n          user {\n              id\n              name\n              email\n              emailVerified\n              createdAt\n              updatedAt\n              avatar\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n": types.CredentialsSignUpDocument,
     "\n  mutation SendResetPasswordLink($input: SendEmailResetPasswordLinkDto!) {\n      sendResetPasswordLink(input: $input) {\n          success\n          errors {\n              code\n              message\n          }\n      }\n  }\n": types.SendResetPasswordLinkDocument,
     "\n  query GetUser {\n    user {\n      id\n      name\n      email\n      emailVerified\n      createdAt\n      updatedAt\n      avatar\n    }\n  }\n": types.GetUserDocument,
+    "\n  mutation CreateUserProfile($input: CreateUserProfileDto!) {\n      createUserProfile(input: $input) {\n          profile {\n              companyKind\n              role\n              teamSize\n              country\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n": types.CreateUserProfileDocument,
     "\n  query GetUserProfile {\n    user {\n      id\n      name\n      email\n      emailVerified\n      createdAt\n      updatedAt\n      avatar\n    }\n  }\n": types.GetUserProfileDocument,
+    "\n  mutation CreateWorkspace($input: CreateWorkspaceDto!) {\n      createWorkspace(input: $input) {\n          workspace {\n              id\n              name\n              slug\n              description\n              avatar\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n  ": types.CreateWorkspaceDocument,
+    "\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n": types.IsWorkspaceSlugValidDocument,
 };
 
 /**
@@ -54,7 +57,19 @@ export function gql(source: "\n  query GetUser {\n    user {\n      id\n      na
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation CreateUserProfile($input: CreateUserProfileDto!) {\n      createUserProfile(input: $input) {\n          profile {\n              companyKind\n              role\n              teamSize\n              country\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n"): (typeof documents)["\n  mutation CreateUserProfile($input: CreateUserProfileDto!) {\n      createUserProfile(input: $input) {\n          profile {\n              companyKind\n              role\n              teamSize\n              country\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query GetUserProfile {\n    user {\n      id\n      name\n      email\n      emailVerified\n      createdAt\n      updatedAt\n      avatar\n    }\n  }\n"): (typeof documents)["\n  query GetUserProfile {\n    user {\n      id\n      name\n      email\n      emailVerified\n      createdAt\n      updatedAt\n      avatar\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateWorkspace($input: CreateWorkspaceDto!) {\n      createWorkspace(input: $input) {\n          workspace {\n              id\n              name\n              slug\n              description\n              avatar\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n  "): (typeof documents)["\n  mutation CreateWorkspace($input: CreateWorkspaceDto!) {\n      createWorkspace(input: $input) {\n          workspace {\n              id\n              name\n              slug\n              description\n              avatar\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n  "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n"): (typeof documents)["\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

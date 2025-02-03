@@ -1,5 +1,4 @@
 import { createEnv } from '@t3-oss/env-nextjs';
-
 export const env = createEnv({
   /*
    * Serverside Environment variables, not available on the client.

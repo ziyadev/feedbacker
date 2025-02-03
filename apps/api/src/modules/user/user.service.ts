@@ -1,17 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { MutateResultFactory } from '@/common/builders/mutate-result.builder';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
+import { UserProfileRepository } from '../database/repositories/user-profile.repository';
 import { UserRepository } from '../database/repositories/user.repository';
 import { AccountBuilder } from './builders/account.builder';
+import { CreateUserProfileErrorBuilder } from './builders/create-user-profile-error.builder';
 import { UserBuilder } from './builders/user.builder';
+import { CreateUserProfileDto } from './dto/create-user-profile.dto';
 import { CreateUserWithAccountDto } from './dto/create-user-with-account.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity } from './entities/user.entity';
-import { AccountService } from './services/account.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
+import { CreateUserProfileModel } from './models/create-user-profile.model';
+import { AccountService } from './services/account.service';
 
 @Injectable()
 export class UserService {
+  private logger = new Logger(UserService.name);
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly userProfileRepository: UserProfileRepository,
     private readonly accountService: AccountService
   ) {}
 
@@ -101,5 +112,42 @@ export class UserService {
       },
       data: user,
     });
+  }
+
+  async handleCreateUserProfile(
+    userId: string,
+    userProfileDto: CreateUserProfileDto
+  ): Promise<CreateUserProfileModel> {
+    try {
+      const errors = new CreateUserProfileErrorBuilder();
+      const user = await this.userProfileRepository.findUnique({
+        where: {
+          userId,
+        },
+      });
+      if (user) {
+        errors.setProfileAlreadyExists();
+        return MutateResultFactory.err({
+          profile: null,
+          errors: errors.build(),
+        });
+      }
+      const profile = await this.userProfileRepository.create({
+        data: {
+          teamSize: userProfileDto.teamSize,
+          companyKind: userProfileDto.companyKind,
+          role: userProfileDto.role,
+          country: userProfileDto.country,
+          userId,
+        },
+      });
+      return MutateResultFactory.ok({
+        profile,
+        errors: errors.build(),
+      });
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 }
