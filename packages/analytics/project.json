@@ -1,0 +1,19 @@
+{
+  "name": "@repo/analytics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/analytics",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "packages/analytics/dist",
+        "main": "packages/analytics/index.ts",
+        "tsConfig": "packages/analytics/tsconfig.json",
+        "clean": true
+      }
+    }
+  },
+
+  "tags": ["analytics", "package"]
+}
