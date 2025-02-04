@@ -17,6 +17,7 @@ import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { IsWorkspaceSlugValidDto } from './dto/is-workspace-slug-valid.dto';
 import { CreateWorkspaceInvitationModel } from './model/create-workspace-invitation.model';
 import { CreateWorkspaceModel } from './model/create-workspace.model';
+import { CurrentWorkspaceDto } from './model/current-workspace.dto';
 import { WorkspaceInvitationStatus } from './model/workspace-invitation.model';
 import { WorkspaceMemberRole } from './model/workspace-member.model';
 
@@ -30,6 +31,26 @@ export class WorkspaceService {
 
     private readonly emailService: EmailService
   ) {}
+
+  async handleCurrentWorkspace(
+    session: SessionData
+  ): Promise<CurrentWorkspaceDto> {
+    const workspace = await this.workspaceRepository.findUnique({
+      where: {
+        id: session.workspace.id,
+      },
+    });
+    const userMember = await this.workspaceMemberRepository.findFirst({
+      where: {
+        workspaceId: workspace.id,
+        userId: session.user.id,
+      },
+    });
+    return {
+      ...workspace,
+      role: userMember.role as WorkspaceMemberRole,
+    };
+  }
 
   /*handle create workspace*/
   async handleCreateWorkspace(
@@ -68,6 +89,13 @@ export class WorkspaceService {
               id: session.user.id,
             },
           },
+        },
+      });
+      await this.workspaceMemberRepository.create({
+        data: {
+          workspaceId: createWorkspace.id,
+          userId: session.user.id,
+          role: WorkspaceMemberRole.ADMIN, // Role admin by default for the creator
         },
       });
       // save workspace in session

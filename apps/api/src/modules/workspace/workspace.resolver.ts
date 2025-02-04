@@ -1,7 +1,7 @@
 import { WorkspaceSessionData } from '@/common/config/sessoin.config';
 import { Session } from '@/common/decorators/session.decorator';
 import { Workspace } from '@/common/decorators/workspace.decorator';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionData } from 'express-session';
 import { Auth } from '../auth/decorator/auth.decorator';
 import { WorkspaceAuth } from '../auth/decorator/workspace.decorator';
@@ -10,11 +10,23 @@ import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { IsWorkspaceSlugValidDto } from './dto/is-workspace-slug-valid.dto';
 import { CreateWorkspaceInvitationModel } from './model/create-workspace-invitation.model';
 import { CreateWorkspaceModel } from './model/create-workspace.model';
+import { CurrentWorkspaceDto } from './model/current-workspace.dto';
 import { WorkspaceMemberRole } from './model/workspace-member.model';
 import { WorkspaceService } from './workspace.service';
 @Resolver()
 export class WorkspaceResolver {
   constructor(private readonly workspaceService: WorkspaceService) {}
+
+  @Auth()
+  @Query(() => CurrentWorkspaceDto, {
+    description: 'Get the currently workspace',
+  })
+  async workspace(
+    @Session() session: SessionData
+  ): Promise<CurrentWorkspaceDto> {
+    return await this.workspaceService.handleCurrentWorkspace(session);
+  }
+
   @Auth()
   @Mutation(() => CreateWorkspaceModel, {
     description: 'Create a new workspace',

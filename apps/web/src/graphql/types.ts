@@ -151,6 +151,25 @@ export type CredentialsSignUpModel = {
   user?: Maybe<UserModel>;
 };
 
+export type CurrentWorkspaceDto = {
+  __typename?: 'CurrentWorkspaceDto';
+  /** URL of the workspace avatar image */
+  avatar?: Maybe<Scalars['String']['output']>;
+  /** Timestamp when the workspace was created */
+  createdAt: Scalars['String']['output'];
+  /** Optional description of the workspace */
+  description?: Maybe<Scalars['String']['output']>;
+  /** Unique identifier of the workspace */
+  id: Scalars['ID']['output'];
+  /** Name of the workspace */
+  name: Scalars['String']['output'];
+  role: WorkspaceMemberRole;
+  /** URL-friendly identifier for the workspace */
+  slug: Scalars['String']['output'];
+  /** Timestamp when the workspace was last updated */
+  updatedAt: Scalars['String']['output'];
+};
+
 export enum FileType {
   ImageGif = 'IMAGE_GIF',
   ImageJpeg = 'IMAGE_JPEG',
@@ -245,6 +264,8 @@ export type Query = {
   __typename?: 'Query';
   /** Get the currently logged in user */
   user: UserModel;
+  /** Get the currently workspace */
+  workspace: CurrentWorkspaceDto;
 };
 
 export type SendEmailResetPasswordLinkDto = {
@@ -393,3 +414,8 @@ export type SendWorkspaceInvitationMutationVariables = Exact<{
 
 
 export type SendWorkspaceInvitationMutation = { __typename?: 'Mutation', sendWorkspaceInvitation: { __typename?: 'CreateWorkspaceInvitationModel', invitation?: { __typename?: 'WorkspaceInvitationModel', id: string, workspaceId: string, email: string, role: WorkspaceMemberRole, status: string, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'CreateWorkspaceInvitationError', code: CreateWorkspaceInvitationErrorCode, message: string }> | null } };
+
+export type WorkspaceQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WorkspaceQuery = { __typename?: 'Query', workspace: { __typename?: 'CurrentWorkspaceDto', id: string, name: string, slug: string, description?: string | null, avatar?: string | null, createdAt: string, updatedAt: string, role: WorkspaceMemberRole } };
