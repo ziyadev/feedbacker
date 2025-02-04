@@ -1,7 +1,6 @@
 'use client';
 import { useLastLogin } from '@/components/hooks/useLastLogin';
 import { Button, Input, InputMessage, Label } from '@/components/ui';
-import { LoadingIcon } from '@/components/ui/icons/loading-icon';
 import { CredentialsSignUpErrorCode } from '@/graphql/graphql';
 import { useMutation } from '@apollo/client';
 import { useForm } from '@tanstack/react-form';
@@ -213,8 +212,8 @@ export const EmailSection = () => {
             </div>
           )}
         </form.Field>
-        <Button type="submit" disabled={loading}>
-          {loading ? <LoadingIcon /> : 'Sign in'}
+        <Button type="submit" isLoading={loading}>
+          Sign in
         </Button>
       </form>
     </div>

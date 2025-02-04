@@ -25,3 +25,24 @@ export const IS_WORKSPACE_SLUG_VALID = gql(`
       isWorkspaceSlugValid(input: $input)
   }
 `);
+
+
+export const SEND_WORKSPACE_INVITATION = gql(`
+  mutation SendWorkspaceInvitation($input: CreateWorkspaceInvitationDto!) {
+      sendWorkspaceInvitation(input: $input) {
+          invitation {
+              id
+              workspaceId
+              email
+              role
+              status
+              createdAt
+              updatedAt
+          }
+          errors {
+              code
+              message
+          }
+      }
+  }
+`)

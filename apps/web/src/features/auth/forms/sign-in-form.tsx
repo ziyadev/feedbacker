@@ -1,6 +1,5 @@
 'use client';
 import { useLastLogin } from '@/components/hooks/useLastLogin';
-import { LoadingIcon } from '@/components/ui/icons/loading-icon';
 import { CredentialsLoginErrorCode } from '@/graphql/types';
 import { useMutation } from '@apollo/client';
 import { Button, Input, InputMessage, Label } from '@feedbacker/ui';
@@ -178,8 +177,8 @@ export const EmailSection = () => {
             </div>
           )}
         </form.Field>
-        <Button type="submit" disabled={loading}>
-          {loading ? <LoadingIcon /> : 'Sign in'}
+        <Button type="submit" isLoading={loading}>
+          Sign in
         </Button>
       </form>
     </div>

@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui';
 import confetti from 'canvas-confetti';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useTransition } from 'react';
 export default function FinishForm() {
   const handleShowConfetti = () => {
     const end = Date.now() + 1 * 1000; // 1 seconds
@@ -32,6 +32,8 @@ export default function FinishForm() {
 
     frame();
   };
+  const [pending, start] = useTransition();
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,7 +42,7 @@ export default function FinishForm() {
   }, []);
 
   return (
-    <form onSubmit={() => true} className="mt-4 space-y-3">
+    <div className="mt-4 space-y-3">
       <div className="relative flex overflow-hidden justify-center items-center aspect-video border rounded-xl border-gray-300 dark:border-gray-800 ">
         <Image
           src="/dashboard-screenshot-mockup.png"
@@ -52,16 +54,15 @@ export default function FinishForm() {
 
       <div className="mt-6 grid space-y-3">
         <Button
-          className="disabled:bg-gray-200 disabled:text-gray-500"
           type="submit"
-          isLoading={false}
+          onClick={() => {
+            start(() => router.push('/dashboard'));
+          }}
+          isLoading={pending}
         >
-          {false ? 'Submitting...' : 'Finish up'}
-        </Button>
-        <Button variant="secondary" asChild>
-          <Link href="/onboarding/team">Back</Link>
+          Finish up
         </Button>
       </div>
-    </form>
+    </div>
   );
 }

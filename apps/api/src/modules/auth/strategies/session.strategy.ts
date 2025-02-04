@@ -1,5 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthStrategy } from './auth.strategy';
+
 @Injectable()
 export class SessionStrategy extends AuthStrategy {
   constructor() {
@@ -7,7 +8,6 @@ export class SessionStrategy extends AuthStrategy {
   }
   async canActivate(context: ExecutionContext) {
     const request = this.getRequest(context);
-    const user = request.session.user;
-    return !!user;
+    return !!request.session.user;
   }
 }

@@ -1,12 +1,21 @@
 import { Session } from '@/common/decorators/session.decorator';
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { SessionData } from 'express-session';
+import { Auth } from './decorator/auth.decorator';
 import { GithubOAuthGuard } from './guard/github.guard';
 import { GoogleOAuthGuard } from './guard/google.guard';
 import { buildOauthRedirectUrl } from './utils/build-oauth-redirect-url';
 
 @Controller('auth')
 export class AuthController {
+  @Auth()
+  @Get('session')
+  session(@Session() session: SessionData) {
+    return {
+      session,
+    };
+  }
   @UseGuards(GoogleOAuthGuard)
   @Get('google')
   google() {

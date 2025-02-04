@@ -1,9 +1,8 @@
-import { useLogout } from './useLogout';
-import { create } from 'zustand';
-import { UserModel } from '@/graphql/graphql';
-import { useEffect, useMemo } from 'react';
-import { useQuery } from '@apollo/client';
 import { GET_USER_PROFILE } from '@/features/user/api/queries';
+import { UserModel } from '@/graphql/graphql';
+import { useQuery } from '@apollo/client';
+import { useEffect, useMemo } from 'react';
+import { create } from 'zustand';
 
 interface UserState {
   user: UserModel | null;
@@ -20,7 +19,6 @@ export const useAuth = () => {
   const { data, ...rest } = useQuery(GET_USER_PROFILE);
   const user = data?.user ?? null;
   const { setUser } = useUserStore();
-  const logout = useLogout({ onSuccess: () => setUser(null) });
 
   // Sync Zustand store with GraphQL user data
   useEffect(() => {
@@ -32,9 +30,8 @@ export const useAuth = () => {
       user,
       isAuthenticated: Boolean(user),
       setUser,
-      logout,
       ...rest,
     }),
-    [user, logout, rest, setUser]
+    [user, rest, setUser]
   );
 };

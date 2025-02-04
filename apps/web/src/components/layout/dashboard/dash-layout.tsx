@@ -1,6 +1,6 @@
 'use client';
 import { PropsWithChildren } from 'react';
-import { Sidebar } from './navigation/sidebar';
+import { Sidebar } from '../navigation/sidebar';
 
 export const DashLayout = ({ children }: PropsWithChildren) => {
   return (

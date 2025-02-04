@@ -1,6 +1,5 @@
 'use client';
 import { BlurIn } from '@/components/motions/blur-in';
-import { LoadingIcon } from '@/components/ui/icons/loading-icon';
 import { SendResetPasswordEmailErrorCode } from '@/graphql/types';
 import { useMutation } from '@apollo/client';
 import { Button, Input, InputMessage, Label } from '@feedbacker/ui';
@@ -115,8 +114,8 @@ export const EmailSection = () => {
             <Link href={'mailto:'}>Check your email</Link>
           </Button>
         ) : (
-          <Button type="submit" disabled={loading}>
-            {loading ? <LoadingIcon /> : 'Send reset instructions'}
+          <Button type="submit" isLoading={loading}>
+            Send reset instructions
           </Button>
         )}
         {isSent && (

@@ -1,11 +1,7 @@
-
-
-import { PropsWithChildren } from 'react'
-import { DashLayout } from '@/components/layout/dash-layout'
-
+import { DashLayout } from '@/components/layout/dashboard/dash-layout';
+import { PropsWithChildren } from 'react';
 
 export default function Layout({ children }: PropsWithChildren) {
-
   return (
     <DashLayout>
       <div className="relative">
@@ -14,5 +10,5 @@ export default function Layout({ children }: PropsWithChildren) {
         </div>
       </div>
     </DashLayout>
-  )
+  );
 }

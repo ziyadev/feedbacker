@@ -125,6 +125,7 @@ export class UserService {
           userId,
         },
       });
+      this.logger.log(user);
       if (user) {
         errors.setProfileAlreadyExists();
         return MutateResultFactory.err({

@@ -17,17 +17,17 @@ model Workspace {
 }
 
 enum WorkspaceMemberRole {
-  member
   admin
+  editor
+  viewer
 }
 
 model WorkspaceMember {
-  id          String   @id @default(cuid())
+  id          String @id @default(cuid())
   workspaceId String
   userId      String
-  permissions String[] // ex: ["feedback:read", "feedback:write","feedback:delete"]
 
-  role      WorkspaceMemberRole @default(member)
+  role      WorkspaceMemberRole @default(viewer)
   workspace Workspace           @relation(fields: [workspaceId], references: [id])
   user      User                @relation(fields: [userId], references: [id])
 
@@ -44,11 +44,12 @@ enum WorkspaceInvitationStatus {
 model WorkspaceInvitation {
   id          String                    @id @default(cuid())
   workspaceId String
+  role        WorkspaceMemberRole?      @default(viewer)
   status      WorkspaceInvitationStatus @default(pending)
-  userId      String
+  expiresAt   DateTime
+  email       String
   workspace   Workspace                 @relation(fields: [workspaceId], references: [id])
-  user        User                      @relation(fields: [userId], references: [id])
 
   @@index([workspaceId])
-  @@index([userId])
+  @@index([email])
 }

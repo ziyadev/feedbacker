@@ -73,6 +73,32 @@ export enum CreateWorkspaceErrorCode {
   SlugAlreadyTaken = 'SLUG_ALREADY_TAKEN'
 }
 
+export type CreateWorkspaceInvitationDto = {
+  email: Scalars['String']['input'];
+  role: WorkspaceMemberRole;
+};
+
+export type CreateWorkspaceInvitationError = {
+  __typename?: 'CreateWorkspaceInvitationError';
+  code: CreateWorkspaceInvitationErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum CreateWorkspaceInvitationErrorCode {
+  EmailAlreadyInvited = 'EMAIL_ALREADY_INVITED',
+  EmailAlreadyMember = 'EMAIL_ALREADY_MEMBER',
+  WorkspaceNotFound = 'WORKSPACE_NOT_FOUND',
+  YouCannotInviteYourself = 'YOU_CANNOT_INVITE_YOURSELF'
+}
+
+export type CreateWorkspaceInvitationModel = {
+  __typename?: 'CreateWorkspaceInvitationModel';
+  /** Create workspace invitation errors */
+  errors?: Maybe<Array<CreateWorkspaceInvitationError>>;
+  /** Invition  */
+  invitation?: Maybe<WorkspaceInvitationModel>;
+};
+
 export type CreateWorkspaceModel = {
   __typename?: 'CreateWorkspaceModel';
   /** Create workspace errors */
@@ -153,15 +179,19 @@ export type Mutation = {
   /** Validates if a password reset token is valid and not expired */
   checkResetPasswordToken: Scalars['Boolean']['output'];
   createUserProfile: CreateUserProfileModel;
+  /** Create a new workspace */
   createWorkspace: CreateWorkspaceModel;
   /** Authenticates a user with credentials and returns user information */
   credentialsLogin: CredentialsLoginModel;
   /** Creates a new user account with the provided credentials and returns user information */
   credentialsSignUp: CredentialsSignUpModel;
   getUploadPresignedUrl: Scalars['String']['output'];
+  /** Check if a workspace slug is valid or not */
   isWorkspaceSlugValid: Scalars['Boolean']['output'];
   /** Sends a password reset link to the provided email address */
   sendResetPasswordLink: SendResetPasswordEmailModel;
+  /** Send a workspace invitation */
+  sendWorkspaceInvitation: CreateWorkspaceInvitationModel;
 };
 
 
@@ -207,6 +237,11 @@ export type MutationIsWorkspaceSlugValidArgs = {
 
 export type MutationSendResetPasswordLinkArgs = {
   input: SendEmailResetPasswordLinkDto;
+};
+
+
+export type MutationSendWorkspaceInvitationArgs = {
+  input: CreateWorkspaceInvitationDto;
 };
 
 export type Query = {
@@ -259,7 +294,7 @@ export type UserModel = {
 export type UserProfileModel = {
   __typename?: 'UserProfileModel';
   /** Type of company or organization */
-  companyKind: Scalars['String']['output'];
+  companyKind: Array<Scalars['String']['output']>;
   /** Country where the person is located */
   country: Scalars['String']['output'];
   /** Role or job title of the profile owner */
@@ -267,6 +302,23 @@ export type UserProfileModel = {
   /** Number of people on the team */
   teamSize: Scalars['String']['output'];
 };
+
+export type WorkspaceInvitationModel = {
+  __typename?: 'WorkspaceInvitationModel';
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  role: WorkspaceMemberRole;
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  workspaceId: Scalars['String']['output'];
+};
+
+export enum WorkspaceMemberRole {
+  Admin = 'ADMIN',
+  Editor = 'EDITOR',
+  Viewer = 'VIEWER'
+}
 
 export type WorkspaceModel = {
   __typename?: 'WorkspaceModel';
@@ -317,7 +369,7 @@ export type CreateUserProfileMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserProfileMutation = { __typename?: 'Mutation', createUserProfile: { __typename?: 'CreateUserProfileModel', profile?: { __typename?: 'UserProfileModel', companyKind: string, role: string, teamSize: string, country: string } | null, errors?: Array<{ __typename?: 'CreateUserProfileError', code: CreateUserProfileErrorCode, message: string }> | null } };
+export type CreateUserProfileMutation = { __typename?: 'Mutation', createUserProfile: { __typename?: 'CreateUserProfileModel', profile?: { __typename?: 'UserProfileModel', companyKind: Array<string>, role: string, teamSize: string, country: string } | null, errors?: Array<{ __typename?: 'CreateUserProfileError', code: CreateUserProfileErrorCode, message: string }> | null } };
 
 export type GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -338,6 +390,13 @@ export type IsWorkspaceSlugValidMutationVariables = Exact<{
 
 export type IsWorkspaceSlugValidMutation = { __typename?: 'Mutation', isWorkspaceSlugValid: boolean };
 
+export type SendWorkspaceInvitationMutationVariables = Exact<{
+  input: CreateWorkspaceInvitationDto;
+}>;
+
+
+export type SendWorkspaceInvitationMutation = { __typename?: 'Mutation', sendWorkspaceInvitation: { __typename?: 'CreateWorkspaceInvitationModel', invitation?: { __typename?: 'WorkspaceInvitationModel', id: string, workspaceId: string, email: string, role: WorkspaceMemberRole, status: string, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'CreateWorkspaceInvitationError', code: CreateWorkspaceInvitationErrorCode, message: string }> | null } };
+
 
 export const CredentialsLoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CredentialsLogin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CredentialsLoginDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"credentialsLogin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<CredentialsLoginMutation, CredentialsLoginMutationVariables>;
 export const CredentialsSignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CredentialsSignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CredentialsSignUpDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"credentialsSignUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<CredentialsSignUpMutation, CredentialsSignUpMutationVariables>;
@@ -347,3 +406,4 @@ export const CreateUserProfileDocument = {"kind":"Document","definitions":[{"kin
 export const GetUserProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]} as unknown as DocumentNode<GetUserProfileQuery, GetUserProfileQueryVariables>;
 export const CreateWorkspaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateWorkspace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWorkspaceDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createWorkspace"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"workspace"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<CreateWorkspaceMutation, CreateWorkspaceMutationVariables>;
 export const IsWorkspaceSlugValidDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"IsWorkspaceSlugValid"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"IsWorkspaceSlugValidDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isWorkspaceSlugValid"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<IsWorkspaceSlugValidMutation, IsWorkspaceSlugValidMutationVariables>;
+export const SendWorkspaceInvitationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SendWorkspaceInvitation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWorkspaceInvitationDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendWorkspaceInvitation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"invitation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"workspaceId"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<SendWorkspaceInvitationMutation, SendWorkspaceInvitationMutationVariables>;

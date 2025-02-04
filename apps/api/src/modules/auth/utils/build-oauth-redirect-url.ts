@@ -5,8 +5,8 @@ export const buildOauthRedirectUrl = (request: Request): string => {
   if (!request.user) {
     return `${url}/auth/sign-in?error=AuthenticationError`;
   }
-  const redirectUrl = request.cookies['redirectUrl'];
-  if (redirectUrl) return redirectUrl;
+  const next = request.cookies['next'];
+  if (next) return next;
 
   if (request.user['isNew']) {
     url += '/onboarding';

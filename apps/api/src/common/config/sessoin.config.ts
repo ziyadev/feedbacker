@@ -1,19 +1,23 @@
+import { WorkspaceMemberRole } from '@/modules/workspace/model/workspace-member.model';
+import { HOST_NAME } from '@repo/utils';
 import { CookieOptions } from 'express';
 import _session from 'express-session';
-import { HOST_NAME } from '@repo/utils';
 import { redisStore } from './redis-store.config';
 export interface UserSessionData {
   id: string;
   email: string;
   emailVerified: boolean;
-  rules: string[];
-  permissions: string[];
   planId: string;
+}
+export interface WorkspaceSessionData {
+  id: string;
+  role: WorkspaceMemberRole;
 }
 
 declare module 'express-session' {
   interface SessionData {
     user: UserSessionData;
+    workspace: WorkspaceSessionData;
   }
 }
 

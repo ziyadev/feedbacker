@@ -1,18 +1,19 @@
 import getUnicodeFlagIcon from 'country-flag-icons/unicode';
 
 import {
-  Button,
-  InputMessage,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Button,
+    InputMessage,
+    Label,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui';
 import { CreateUserProfileErrorCode } from '@/graphql/types';
 import { useMutation } from '@apollo/client';
 import { useForm } from '@tanstack/react-form';
+import Link from 'next/link';
 import countryList from 'react-select-country-list';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -316,6 +317,9 @@ export default function CompanyDetailsForm() {
       <div className="mt-6 grid space-y-3">
         <Button type="submit" isLoading={loading || pending}>
           Continue
+        </Button>
+        <Button variant="secondary" asChild>
+          <Link href="/onboarding/team">Skip</Link>
         </Button>
       </div>
     </form>

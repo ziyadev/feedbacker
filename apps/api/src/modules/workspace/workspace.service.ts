@@ -4,21 +4,36 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { SessionData } from 'express-session';
+import { WorkspaceInvitationRepository } from '../database/repositories/workspace-invitation.repository';
+import { WorkspaceMemberRepository } from '../database/repositories/workspace-member.repository';
 import { WorkspaceRepository } from '../database/repositories/workspace.repository';
+import { EmailService } from '../email/email.service';
 import { CreateWorkspaceErrorBuilder } from './builder/create-workspace-error.builder';
+import { CreateWorkspaceInvitationErrorBuilder } from './builder/create-workspace-invitation-error.builder';
 import { WorkspaceBuilder } from './builder/workspace.builder';
+import { CreateWorkspaceInvitationDto } from './dto/create-workspace-invitation.dto';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { IsWorkspaceSlugValidDto } from './dto/is-workspace-slug-valid.dto';
+import { CreateWorkspaceInvitationModel } from './model/create-workspace-invitation.model';
 import { CreateWorkspaceModel } from './model/create-workspace.model';
+import { WorkspaceInvitationStatus } from './model/workspace-invitation.model';
+import { WorkspaceMemberRole } from './model/workspace-member.model';
 
 @Injectable()
 export class WorkspaceService {
   private readonly logger = new Logger(WorkspaceService.name);
-  constructor(private readonly workspaceRepository: WorkspaceRepository) {}
+  constructor(
+    private readonly workspaceRepository: WorkspaceRepository,
+    private readonly workspaceMemberRepository: WorkspaceMemberRepository,
+    private readonly workspaceInvitationRepository: WorkspaceInvitationRepository,
+
+    private readonly emailService: EmailService
+  ) {}
 
   /*handle create workspace*/
   async handleCreateWorkspace(
-    userId: string,
+    session: SessionData,
     input: CreateWorkspaceDto
   ): Promise<CreateWorkspaceModel> {
     try {
@@ -50,12 +65,16 @@ export class WorkspaceService {
           avatar: workspace.avatar,
           owner: {
             connect: {
-              id: userId,
+              id: session.user.id,
             },
           },
         },
       });
-
+      // save workspace in session
+      session.workspace = {
+        id: createWorkspace.id,
+        role: WorkspaceMemberRole.ADMIN, // Role admin by default for the creator
+      };
       return MutateResultFactory.ok({
         errors: null,
         workspace: createWorkspace,
@@ -80,6 +99,94 @@ export class WorkspaceService {
       return !findWorkspace;
     } catch (e) {
       this.logger.error('Error finding workspace', e);
+      throw new InternalServerErrorException('Something went wrong');
+    }
+  }
+
+  /* handle send workspace invitation */
+  async handleSendWorkspaceInvitation(
+    workspaceId: string,
+    input: CreateWorkspaceInvitationDto
+  ): Promise<CreateWorkspaceInvitationModel> {
+    try {
+      const errors = new CreateWorkspaceInvitationErrorBuilder();
+      // we check if the workspace exists
+      const workspace = await this.workspaceRepository.findUnique({
+        where: {
+          id: workspaceId,
+        },
+        include: {
+          owner: true,
+        },
+      });
+      if (!workspace) {
+        errors.setWorkspaceNotFound();
+        return MutateResultFactory.err({
+          errors: errors.build(),
+          invitation: null,
+        });
+      }
+
+      // check if email already member of workspace
+      const findMember = await this.workspaceMemberRepository.findFirst({
+        where: {
+          workspaceId: workspace.id,
+          user: {
+            email: input.email,
+          },
+        },
+      });
+
+      if (findMember) {
+        errors.setEmailAlreadyMember();
+        return MutateResultFactory.err({
+          errors: errors.build(),
+          invitation: null,
+        });
+      }
+      // Check if email is already invited
+      const findInvitation = await this.workspaceInvitationRepository.findFirst(
+        {
+          where: {
+            email: input.email,
+            // and it should be expired
+            expiresAt: {
+              gt: new Date(),
+            },
+            // and still pending
+            status: WorkspaceInvitationStatus.PENDING,
+          },
+        }
+      );
+      if (findInvitation) {
+        errors.setEmailAlreadyInvited();
+        return MutateResultFactory.err({
+          errors: errors.build(),
+          invitation: null,
+        });
+      }
+      // Create invitation
+      const workspaceInvitation =
+        await this.workspaceInvitationRepository.create({
+          data: {
+            workspaceId: workspace.id,
+            email: input.email,
+            role: input.role,
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15), // expire in 15 days
+          },
+        });
+      // send the invitaion via email
+      await this.emailService.sendWorkspaceInvitationEmail({
+        email: input.email,
+        url: '', // TODO: setup invitation url
+        workspaceName: workspace.name,
+      });
+      return MutateResultFactory.ok({
+        errors: null,
+        invitation: workspaceInvitation,
+      });
+    } catch (e) {
+      this.logger.error('Error sending workspace invitation', e);
       throw new InternalServerErrorException('Something went wrong');
     }
   }

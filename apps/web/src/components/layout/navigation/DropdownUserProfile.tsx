@@ -1,35 +1,28 @@
-"use client"
+'use client';
 
-import { useAuth } from "@/features/auth/hooks/useAuth"
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-
   DropdownMenuSeparator,
-
   DropdownMenuTrigger,
-} from "@feedbacker/ui"
-import {
-  RiArrowRightUpLine,
-
-} from "@remixicon/react"
-import * as React from "react"
+} from '@feedbacker/ui';
+import { RiArrowRightUpLine } from '@remixicon/react';
+import * as React from 'react';
 
 export type DropdownUserProfileProps = {
-  children: React.ReactNode
-  align?: "center" | "start" | "end",
-}
+  children: React.ReactNode;
+  align?: 'center' | 'start' | 'end';
+};
 
 export function DropdownUserProfile({
   children,
-  align = "start",
+  align = 'start',
 }: DropdownUserProfileProps) {
-  const { logout, user } = useAuth();
-  const { trigger, isMutating } = logout
-
+  const { user } = useAuth();
 
   return (
     <>
@@ -54,17 +47,13 @@ export function DropdownUserProfile({
                 aria-hidden="true"
               />
             </DropdownMenuItem>
-
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem disabled={isMutating}
-              onClick={() => trigger()}>
-              Sign out
-            </DropdownMenuItem>
+            <DropdownMenuItem>Sign out</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
+  );
 }

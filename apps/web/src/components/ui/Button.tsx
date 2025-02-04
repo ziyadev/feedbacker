@@ -2,7 +2,7 @@
 // Tremor Button [v0.2.0]
 
 import { Slot } from '@radix-ui/react-slot';
-import { RiLoader2Fill } from '@remixicon/react';
+import { RiLoader5Line } from '@remixicon/react';
 import React from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
@@ -29,7 +29,7 @@ const buttonVariants = tv({
         // hover color
         'hover:bg-blue-600 dark:hover:bg-blue-600',
         // disabled
-        'disabled:bg-blue-300 disabled:text-white',
+        'disabled:bg-gray-200 disabled:text-gray-500',
         'disabled:dark:bg-blue-800 disabled:dark:text-blue-400',
       ],
       secondary: [
@@ -125,10 +125,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <span className="pointer-events-none flex shrink-0 items-center justify-center gap-1.5">
-            <RiLoader2Fill
-              className="size-4 shrink-0 animate-spin"
-              aria-hidden="true"
-            />
+            <RiLoader5Line className="size-5 animate-spin" aria-hidden="true" />
             <span className="sr-only">
               {loadingText ? loadingText : 'Loading'}
             </span>

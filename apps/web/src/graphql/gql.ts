@@ -22,6 +22,7 @@ const documents = {
     "\n  query GetUserProfile {\n    user {\n      id\n      name\n      email\n      emailVerified\n      createdAt\n      updatedAt\n      avatar\n    }\n  }\n": types.GetUserProfileDocument,
     "\n  mutation CreateWorkspace($input: CreateWorkspaceDto!) {\n      createWorkspace(input: $input) {\n          workspace {\n              id\n              name\n              slug\n              description\n              avatar\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n  ": types.CreateWorkspaceDocument,
     "\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n": types.IsWorkspaceSlugValidDocument,
+    "\n  mutation SendWorkspaceInvitation($input: CreateWorkspaceInvitationDto!) {\n      sendWorkspaceInvitation(input: $input) {\n          invitation {\n              id\n              workspaceId\n              email\n              role\n              status\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n": types.SendWorkspaceInvitationDocument,
 };
 
 /**
@@ -70,6 +71,10 @@ export function gql(source: "\n  mutation CreateWorkspace($input: CreateWorkspac
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n"): (typeof documents)["\n  mutation IsWorkspaceSlugValid($input: IsWorkspaceSlugValidDto!) {\n      isWorkspaceSlugValid(input: $input)\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation SendWorkspaceInvitation($input: CreateWorkspaceInvitationDto!) {\n      sendWorkspaceInvitation(input: $input) {\n          invitation {\n              id\n              workspaceId\n              email\n              role\n              status\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n"): (typeof documents)["\n  mutation SendWorkspaceInvitation($input: CreateWorkspaceInvitationDto!) {\n      sendWorkspaceInvitation(input: $input) {\n          invitation {\n              id\n              workspaceId\n              email\n              role\n              status\n              createdAt\n              updatedAt\n          }\n          errors {\n              code\n              message\n          }\n      }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

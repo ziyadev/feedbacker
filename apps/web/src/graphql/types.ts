@@ -70,6 +70,32 @@ export enum CreateWorkspaceErrorCode {
   SlugAlreadyTaken = 'SLUG_ALREADY_TAKEN'
 }
 
+export type CreateWorkspaceInvitationDto = {
+  email: Scalars['String']['input'];
+  role: WorkspaceMemberRole;
+};
+
+export type CreateWorkspaceInvitationError = {
+  __typename?: 'CreateWorkspaceInvitationError';
+  code: CreateWorkspaceInvitationErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum CreateWorkspaceInvitationErrorCode {
+  EmailAlreadyInvited = 'EMAIL_ALREADY_INVITED',
+  EmailAlreadyMember = 'EMAIL_ALREADY_MEMBER',
+  WorkspaceNotFound = 'WORKSPACE_NOT_FOUND',
+  YouCannotInviteYourself = 'YOU_CANNOT_INVITE_YOURSELF'
+}
+
+export type CreateWorkspaceInvitationModel = {
+  __typename?: 'CreateWorkspaceInvitationModel';
+  /** Create workspace invitation errors */
+  errors?: Maybe<Array<CreateWorkspaceInvitationError>>;
+  /** Invition  */
+  invitation?: Maybe<WorkspaceInvitationModel>;
+};
+
 export type CreateWorkspaceModel = {
   __typename?: 'CreateWorkspaceModel';
   /** Create workspace errors */
@@ -150,15 +176,19 @@ export type Mutation = {
   /** Validates if a password reset token is valid and not expired */
   checkResetPasswordToken: Scalars['Boolean']['output'];
   createUserProfile: CreateUserProfileModel;
+  /** Create a new workspace */
   createWorkspace: CreateWorkspaceModel;
   /** Authenticates a user with credentials and returns user information */
   credentialsLogin: CredentialsLoginModel;
   /** Creates a new user account with the provided credentials and returns user information */
   credentialsSignUp: CredentialsSignUpModel;
   getUploadPresignedUrl: Scalars['String']['output'];
+  /** Check if a workspace slug is valid or not */
   isWorkspaceSlugValid: Scalars['Boolean']['output'];
   /** Sends a password reset link to the provided email address */
   sendResetPasswordLink: SendResetPasswordEmailModel;
+  /** Send a workspace invitation */
+  sendWorkspaceInvitation: CreateWorkspaceInvitationModel;
 };
 
 
@@ -204,6 +234,11 @@ export type MutationIsWorkspaceSlugValidArgs = {
 
 export type MutationSendResetPasswordLinkArgs = {
   input: SendEmailResetPasswordLinkDto;
+};
+
+
+export type MutationSendWorkspaceInvitationArgs = {
+  input: CreateWorkspaceInvitationDto;
 };
 
 export type Query = {
@@ -256,7 +291,7 @@ export type UserModel = {
 export type UserProfileModel = {
   __typename?: 'UserProfileModel';
   /** Type of company or organization */
-  companyKind: Scalars['String']['output'];
+  companyKind: Array<Scalars['String']['output']>;
   /** Country where the person is located */
   country: Scalars['String']['output'];
   /** Role or job title of the profile owner */
@@ -264,6 +299,23 @@ export type UserProfileModel = {
   /** Number of people on the team */
   teamSize: Scalars['String']['output'];
 };
+
+export type WorkspaceInvitationModel = {
+  __typename?: 'WorkspaceInvitationModel';
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  role: WorkspaceMemberRole;
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  workspaceId: Scalars['String']['output'];
+};
+
+export enum WorkspaceMemberRole {
+  Admin = 'ADMIN',
+  Editor = 'EDITOR',
+  Viewer = 'VIEWER'
+}
 
 export type WorkspaceModel = {
   __typename?: 'WorkspaceModel';
@@ -314,7 +366,7 @@ export type CreateUserProfileMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserProfileMutation = { __typename?: 'Mutation', createUserProfile: { __typename?: 'CreateUserProfileModel', profile?: { __typename?: 'UserProfileModel', companyKind: string, role: string, teamSize: string, country: string } | null, errors?: Array<{ __typename?: 'CreateUserProfileError', code: CreateUserProfileErrorCode, message: string }> | null } };
+export type CreateUserProfileMutation = { __typename?: 'Mutation', createUserProfile: { __typename?: 'CreateUserProfileModel', profile?: { __typename?: 'UserProfileModel', companyKind: Array<string>, role: string, teamSize: string, country: string } | null, errors?: Array<{ __typename?: 'CreateUserProfileError', code: CreateUserProfileErrorCode, message: string }> | null } };
 
 export type GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -334,3 +386,10 @@ export type IsWorkspaceSlugValidMutationVariables = Exact<{
 
 
 export type IsWorkspaceSlugValidMutation = { __typename?: 'Mutation', isWorkspaceSlugValid: boolean };
+
+export type SendWorkspaceInvitationMutationVariables = Exact<{
+  input: CreateWorkspaceInvitationDto;
+}>;
+
+
+export type SendWorkspaceInvitationMutation = { __typename?: 'Mutation', sendWorkspaceInvitation: { __typename?: 'CreateWorkspaceInvitationModel', invitation?: { __typename?: 'WorkspaceInvitationModel', id: string, workspaceId: string, email: string, role: WorkspaceMemberRole, status: string, createdAt: any, updatedAt: any } | null, errors?: Array<{ __typename?: 'CreateWorkspaceInvitationError', code: CreateWorkspaceInvitationErrorCode, message: string }> | null } };
