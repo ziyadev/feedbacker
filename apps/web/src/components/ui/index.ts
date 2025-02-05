@@ -15,6 +15,7 @@ export * from './Label';
 export * from './Popover';
 export * from './ProgressBar';
 export * from './ProgressCircle';
+export * from './CommandBar';
 export * from './RadioCardGroup';
 export * from './RadioGroup';
 export * from './Select';

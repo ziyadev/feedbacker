@@ -3,16 +3,16 @@
 import { useWorkspace } from '@/features/workspace/hooks/useWorkspace';
 import { cx, focusInput } from '@/lib/utils';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  Skeleton,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    Skeleton,
 } from '@feedbacker/ui';
-import { RiArrowRightSLine, RiExpandUpDownLine } from '@remixicon/react';
+import { RiExpandUpDownLine } from '@remixicon/react';
 import React from 'react';
 import { ModalAddWorkspace } from './ModalAddWorkspace';
 
@@ -174,11 +174,7 @@ export const WorkspacesDropdownMobile = () => {
     return (
       <button className="flex items-center gap-x-1.5 rounded-md p-2 hover:bg-gray-100 focus:outline-none hover:dark:bg-gray-900">
         <Skeleton className="size-8 aspect-square rounded-md" />
-        <RiArrowRightSLine
-          className="size-4 shrink-0 text-gray-500"
-          aria-hidden="true"
-        />
-        <Skeleton className="h-4 w-14 rounded-md" />
+
       </button>
     );
   }
@@ -200,19 +196,6 @@ export const WorkspacesDropdownMobile = () => {
             >
               {workspace?.name.slice(0, 1).toUpperCase()}
             </span>
-            <RiArrowRightSLine
-              className="size-4 shrink-0 text-gray-500"
-              aria-hidden="true"
-            />
-            <div className="flex w-full items-center justify-between gap-x-3 truncate">
-              <p className="truncate whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-50">
-                {workspace?.name}
-              </p>
-              <RiExpandUpDownLine
-                className="size-4 shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
-            </div>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent

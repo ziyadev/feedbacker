@@ -4,9 +4,12 @@ export const siteConfig = {
   description: 'The only dashboard you will ever need.',
   baseLinks: {
     home: '/',
-    overview: '/overview',
-    details: '/details',
-    settings: '/settings',
+    overview: '/dashboard/overview',
+    quickstart: '/dashboard/quickstart',
+    webhooks: '/dashboard/webhooks',
+    apikeys: '/dashboard/apikeys',
+    feedback: '/dashboard/feedback',
+    settings: '/dashboard/settings',
   },
   externalLink: {
     blocks: 'https://blocks.tremor.so/templates#dashboard',
