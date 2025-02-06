@@ -27,11 +27,11 @@ model User {
   referralLinkId   String? // this user's referral link ID
 
   // relational data
-  accounts            Account[]
-  sessions            Session[]
-  workspaces          Workspace[]
-  workspaceMembers    WorkspaceMember[]
-  userProfile         UserProfile?
+  accounts         Account[]
+  sessions         Session[]
+  workspaces       Workspace[]
+  workspaceMembers WorkspaceMember[]
+  userProfile      UserProfile?
 
   @@index(source)
   @@index(defaultWorkspace)

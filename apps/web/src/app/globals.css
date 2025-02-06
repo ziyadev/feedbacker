@@ -1,2 +1,9 @@
 @import 'tailwindcss';
 
+@layer base {
+  * {
+  }
+  body {
+    @apply dark:bg-neutral-950 dark:border-neutral-900;
+  }
+}

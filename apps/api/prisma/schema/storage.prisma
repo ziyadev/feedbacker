@@ -12,15 +12,19 @@ model Media {
   key  String?
   size Int?
 
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   mediaVideos MediaVideo[]
   mediaImages MediaImage[]
 
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+
+  Feedback   Feedback? @relation(fields: [feedbackId], references: [id])
+  feedbackId String?
+
+  @@index([feedbackId])
   @@index([workspaceId])
 }
 

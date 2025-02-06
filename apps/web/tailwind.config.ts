@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
 import twForms from '@tailwindcss/forms';
+import type { Config } from 'tailwindcss';
 import tailwindcssAnimated from 'tailwindcss-animated';
 
 const config: Config = {

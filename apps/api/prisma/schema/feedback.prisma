@@ -1,12 +1,86 @@
-model Feedback {
-  id          String    @id @default(cuid())
-  workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  metadata    Json? // ex more details about user, feedback, etc
-  rating      Int
-  comment     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+enum FeedbackPriority {
+  URGRGENT
+  HIGH
+  NEUTRAL
+  LOW
+}
 
+enum FeedbackStatus {
+  OPEN
+  CLOSED
+  IN_QA
+  TODO
+  BACKLOG
+  RESOLVED
+}
+
+enum FeedbackType {
+  BUG
+  FEATURE
+  QUESTION
+  GENERAL
+}
+
+model FeedbackCategory {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  feedbacks   Feedback[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model FeedbackView {
+  id        String          @id @default(cuid())
+  memberId  String
+  member    WorkspaceMember @relation(fields: [memberId], references: [id])
+  feedbacks Feedback[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+}
+
+model FeedbackNote {
+  id        String     @id @default(cuid())
+  title     String
+  note      String
+  feedbacks Feedback[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Feedback {
+  id           String             @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace          @relation(fields: [workspaceId], references: [id])
+  metadata     Json? // ex more details about user, feedback, etc
+  userMetadata Json? // ex more details about user, feedback, etc
+  rating       Int?
+  type         FeedbackType
+  medias       Media[]
+  comment      String
+  priority     FeedbackPriority
+  status       FeedbackStatus
+  category     FeedbackCategory[]
+  pageUrl      String
+  country      String
+  summary      String?
+  assignedTo   WorkspaceMember?   @relation(fields: [assignedToId], references: [id])
+  assignedToId String?
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  FeedbackNote   FeedbackNote?  @relation(fields: [feedbackNoteId], references: [id])
+  feedbackNoteId String?
+  FeedbackViews  FeedbackView[]
+
+  @@index([feedbackNoteId])
+  @@index([assignedToId])
   @@index([workspaceId])
 }
