@@ -1,76 +1,34 @@
 'use client';
 
-import { formatters } from '@/lib/utils';
-import {
-  Avatar,
-  AvatarFallback,
-  Badge,
-  BadgeProps,
-  Checkbox,
-} from '@feedbacker/ui';
+import { Badge, BadgeProps } from '@feedbacker/ui';
+import { RiExternalLinkLine } from '@remixicon/react';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../../components/ui/data-table/DataTableColumnHeader';
 import { DataTableRowActions } from '../../../../components/ui/data-table/DataTableRowActions';
 import { statuses } from './data/data';
 import { Usage } from './data/schema';
-import { ConditionFilter } from './DataTableFilter';
 
 const columnHelper = createColumnHelper<Usage>();
 
 export const columns = [
-  columnHelper.display({
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected()
-            ? true
-            : table.getIsSomeRowsSelected()
-            ? 'indeterminate'
-            : false
-        }
-        onCheckedChange={() => table.toggleAllPageRowsSelected()}
-        className="translate-y-0.5"
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={() => row.toggleSelected()}
-        className="translate-y-0.5"
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    meta: {
-      displayName: 'Select',
-    },
-  }),
-  columnHelper.accessor('user', {
+  columnHelper.accessor('endpoint', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="User" />
+      <DataTableColumnHeader column={column} title="Endpoint" />
     ),
     enableSorting: true,
     enableHiding: false,
     meta: {
-      displayName: 'User',
+      displayName: 'endpoint',
+      className: 'text-left truncate whitespace-nowrap max-w-76',
     },
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar className="size-8">
-            <AvatarFallback>
-              {row.original.user.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-left truncate whitespace-nowrap max-w-48">
-            {row.original.user}
-          </span>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <RiExternalLinkLine className="size-5" />
+        <span className="text-left truncate whitespace-nowrap">
+          {row.original.endpoint}
+        </span>
+      </div>
+    ),
   }),
   columnHelper.accessor('status', {
     header: ({ column }) => (
@@ -162,48 +120,7 @@ export const columns = [
       );
     },
   }),
-  columnHelper.accessor('costs', {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Costs" />
-    ),
-    enableSorting: true,
-    meta: {
-      className: 'text-right',
-      displayName: 'Costs',
-    },
-    cell: ({ getValue }) => {
-      return (
-        <span className="font-medium">{formatters.currency(getValue())}</span>
-      );
-    },
-    filterFn: (row, columnId, filterValue: ConditionFilter) => {
-      const value = row.getValue(columnId) as number;
-      const [min, max] = filterValue.value as [number, number];
 
-      switch (filterValue.condition) {
-        case 'is-equal-to':
-          return value == min;
-        case 'is-between':
-          return value >= min && value <= max;
-        case 'is-greater-than':
-          return value > min;
-        case 'is-less-than':
-          return value < min;
-        default:
-          return true;
-      }
-    },
-  }),
-  columnHelper.accessor('lastEdited', {
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last edited" />
-    ),
-    enableSorting: false,
-    meta: {
-      className: 'tabular-nums',
-      displayName: 'Last edited',
-    },
-  }),
   columnHelper.accessor('createdAt', {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created at" />

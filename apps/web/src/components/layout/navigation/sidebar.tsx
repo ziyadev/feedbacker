@@ -6,6 +6,7 @@ import {
   RiHome2Line,
   RiInbox2Line,
   RiKey2Line,
+  RiRfidLine,
   RiSettings5Line,
   RiWebhookLine,
 } from '@remixicon/react';
@@ -29,6 +30,11 @@ export const navigation = [
     name: 'Inbox',
     href: siteConfig.baseLinks.feedback,
     icon: RiInbox2Line,
+  },
+  {
+    name: 'Events',
+    href: siteConfig.baseLinks.events,
+    icon: RiRfidLine,
   },
   {
     name: 'Webhooks',

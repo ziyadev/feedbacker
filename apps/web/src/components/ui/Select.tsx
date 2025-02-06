@@ -1,23 +1,75 @@
 // Tremor Select [v0.0.3]
+import { DateRange } from "react-day-picker"
+import { format } from "date-fns"
 
-import React from 'react';
 import * as SelectPrimitives from '@radix-ui/react-select';
 import {
   RiArrowDownSLine,
+  RiArrowDropDownLine,
   RiArrowUpSLine,
   RiCheckLine,
-  RiExpandUpDownLine,
 } from '@remixicon/react';
+import React from 'react';
 
-import { cx } from '@/lib/utils';
-import { focusInput } from '@/lib/utils';
-import { hasErrorInput } from '@/lib/utils';
+import { cx, focusInput, hasErrorInput } from '@/lib/utils';
 
 const Select = SelectPrimitives.Root;
 Select.displayName = 'Select';
 
 const SelectGroup = SelectPrimitives.Group;
 SelectGroup.displayName = 'SelectGroup';
+
+const SelectItemPeriod = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitives.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitives.Item> & {
+    period?: DateRange | undefined
+  }
+>(({ className, children, period, ...props }, forwardedRef) => {
+  return (
+    <SelectPrimitives.Item
+      ref={forwardedRef}
+      className={cx(
+        // base
+        "relative flex cursor-pointer items-center rounded py-2 pl-8 pr-3 outline-none transition-colors data-[state=checked]:font-semibold sm:text-sm",
+        // text color
+        "text-gray-900 dark:text-gray-50",
+        // disabled
+        "data-[disabled]:pointer-events-none data-[disabled]:text-gray-400 data-[disabled]:hover:bg-none dark:data-[disabled]:text-gray-600",
+        // focus
+        "focus-visible:bg-gray-100 focus-visible:dark:bg-gray-900",
+        // hover
+        "hover:bg-gray-100 hover:dark:bg-gray-900",
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <SelectPrimitives.ItemIndicator>
+          <RiCheckLine
+            className="size-5 shrink-0 text-gray-800 dark:text-gray-200"
+            aria-hidden="true"
+          />
+        </SelectPrimitives.ItemIndicator>
+      </span>
+      <div className="flex w-full items-center">
+        {/* adapt width accordingly if you use longer names for periods */}
+        <span className="w-40 sm:w-32">
+          <SelectPrimitives.ItemText>{children}</SelectPrimitives.ItemText>
+        </span>
+        <span>
+          {period?.from && period?.to && (
+            <span className="whitespace-nowrap font-normal text-gray-400">
+              {format(period.from, "MMM d, yyyy")} –{" "}
+              {format(period.to, "MMM d, yyyy")}
+            </span>
+          )}
+        </span>
+      </div>
+    </SelectPrimitives.Item>
+  )
+})
+
+SelectItemPeriod.displayName = "SelectItemPeriod"
 
 const SelectValue = SelectPrimitives.Value;
 SelectValue.displayName = 'SelectValue';
@@ -49,8 +101,10 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitives.Trigger> & {
     hasError?: boolean;
+    icon?: any;
   }
->(({ className, hasError, children, ...props }, forwardedRef) => {
+>(({ className, hasError, icon, children, ...props }, forwardedRef) => {
+  const IconComponent = icon ? icon : RiArrowDropDownLine;
   return (
     <SelectPrimitives.Trigger
       ref={forwardedRef}
@@ -64,10 +118,10 @@ const SelectTrigger = React.forwardRef<
     >
       <span className="truncate">{children}</span>
       <SelectPrimitives.Icon asChild>
-        <RiExpandUpDownLine
+        <IconComponent
           className={cx(
             // base
-            'size-4 shrink-0',
+            'size-5 shrink-0',
             // text color
             'text-gray-400 dark:text-gray-600',
             // disabled
@@ -164,7 +218,7 @@ const SelectContent = React.forwardRef<
           className={cx(
             'p-1',
             position === 'popper' &&
-              'h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]'
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]'
           )}
         >
           {children}
@@ -260,5 +314,5 @@ export {
   SelectItem,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue, SelectItemPeriod
 };

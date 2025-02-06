@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { randUrl } from '@ngneat/falso';
 import { Usage } from './schema';
 export const roles: { value: string; label: string }[] = [
   {
@@ -159,7 +159,7 @@ export const invitedUsers: {
 
 export const usage: Usage[] = [
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 5422.35,
     region: 'US-West 1',
@@ -168,7 +168,7 @@ export const usage: Usage[] = [
     lastEdited: '23/09/2023 13:00',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 6087.11,
     region: 'US-East 2',
@@ -177,7 +177,7 @@ export const usage: Usage[] = [
     lastEdited: '22/09/2023 10:45',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 7234.56,
     region: 'EU-West 1',
@@ -186,7 +186,7 @@ export const usage: Usage[] = [
     lastEdited: '17/05/2021 08:32',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'inactive',
     costs: 0,
     region: 'US-West 2',
@@ -195,7 +195,7 @@ export const usage: Usage[] = [
     lastEdited: '10/11/2022 15:24',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 8190.77,
     region: 'US-East 1',
@@ -204,7 +204,7 @@ export const usage: Usage[] = [
     lastEdited: '05/06/2023 12:16',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'archived',
     costs: 7609.32,
     region: 'EU-North 1',
@@ -213,7 +213,7 @@ export const usage: Usage[] = [
     lastEdited: '23/01/2022 11:11',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 5204.98,
     region: 'US-West 1',
@@ -222,7 +222,7 @@ export const usage: Usage[] = [
     lastEdited: '14/03/2023 14:45',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'inactive',
     costs: 0,
     region: 'EU-Central 1',
@@ -231,7 +231,7 @@ export const usage: Usage[] = [
     lastEdited: '12/02/2023 09:12',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 9874.56,
     region: 'US-East 1',
@@ -240,7 +240,7 @@ export const usage: Usage[] = [
     lastEdited: '19/08/2022 16:03',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 5486.99,
     region: 'EU-West 1',
@@ -249,7 +249,7 @@ export const usage: Usage[] = [
     lastEdited: '29/11/2021 17:25',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 6120.45,
     region: 'US-West 2',
@@ -258,7 +258,7 @@ export const usage: Usage[] = [
     lastEdited: '07/12/2023 07:14',
   },
   {
-    user: uuid(),
+    endpoint: randUrl(),
     status: 'live',
     costs: 4834.11,
     region: 'EU-Central 1',

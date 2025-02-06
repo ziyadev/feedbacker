@@ -3,17 +3,18 @@
 import { cx } from '@/components/lib/utils';
 import { Searchbar } from '@/components/ui/data-table/Searchbar';
 import {
-  Button,
+  DateRangePicker,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue,DateRange
 } from '@feedbacker/ui';
-import { RiFilterLine } from '@remixicon/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 
 export function Filterbar({ className, ...props }: ComponentProps<'div'>) {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
   return (
     <div
       className={cx(
@@ -38,14 +39,14 @@ export function Filterbar({ className, ...props }: ComponentProps<'div'>) {
           </Select>
         </div>
 
-        <Searchbar placeholder="Search for an exact feedback ID... " />
-        <Searchbar placeholder="Search for an exact user ID... " />
+        <Searchbar placeholder="Search for an exact event name... " />
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="secondary">
-          <RiFilterLine className="size-4 mr-2" aria-hidden="true" />
-          Advanced filter
-        </Button>
+        <DateRangePicker
+          value={dateRange}
+          onChange={setDateRange}
+
+        />
       </div>
     </div>
   );

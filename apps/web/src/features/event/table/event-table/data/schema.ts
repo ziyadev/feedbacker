@@ -1,5 +1,5 @@
 export type Usage = {
-  user: string;
+  endpoint: string;
   status: string;
   costs: number;
   region: string;

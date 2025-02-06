@@ -2,11 +2,15 @@
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+
+    "baseUrl": ".",
+
+    "noImplicitAny": false,
+
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -14,6 +18,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "allowUnusedLabels": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "plugins": [
       {
         "name": "next"
@@ -24,6 +31,7 @@
       "@/*": ["./src/*"],
       "@feedbacker/ui": ["./src/components/ui/index.ts"],
       "@/lib/utils": ["./src/components/lib/utils.ts"],
+      "@/lib/chartUtils": ["./src/components/lib/chartUtils.ts"],
       "@/features/*": ["./src/features/*"]
     }
   },

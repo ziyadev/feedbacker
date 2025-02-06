@@ -4,7 +4,7 @@ import { columns } from './columns';
 import { usage } from './data/data';
 import { Filterbar } from './DataTableFilterbar';
 
-export default function FeedbackTable() {
+export default function EventTable() {
   return (
     <div className="space-y-3 ">
       <Filterbar />
