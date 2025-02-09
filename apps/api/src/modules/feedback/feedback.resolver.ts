@@ -10,9 +10,16 @@ import {
 } from './dto/get-all-feedbacks-filter.dto';
 import { WorkspaceAuth } from '../auth/decorator/workspace.decorator';
 import { Auth } from '../auth/decorator/auth.decorator';
+import { WorkspaceMemberRole } from '../workspace/model/workspace-member.model';
 
 @Auth()
-@WorkspaceAuth()
+@WorkspaceAuth({
+  roles: [
+    WorkspaceMemberRole.ADMIN,
+    WorkspaceMemberRole.EDITOR,
+    WorkspaceMemberRole.VIEWER,
+  ],
+})
 @Resolver(() => FeedbackModel)
 export class FeedbackResolver {
   constructor(private readonly feedbackService: FeedbackService) {}
