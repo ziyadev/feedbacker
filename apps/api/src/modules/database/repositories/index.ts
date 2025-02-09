@@ -1,4 +1,5 @@
 import { AccountRepository } from './account.repository';
+import { FeedbackRepository } from './feedback.repository';
 import { MediaImageRepository } from './media-image.repository';
 import { MediaVideoRepository } from './media-video.repository';
 import { MediaRepository } from './media.repository';
@@ -20,4 +21,5 @@ export const Repositories = [
   MediaRepository,
   MediaVideoRepository,
   MediaImageRepository,
+  FeedbackRepository,
 ];

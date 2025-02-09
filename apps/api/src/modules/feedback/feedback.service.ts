@@ -1,40 +1,51 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, Logger } from '@nestjs/common';
+import { FeedbackRepository } from '../database/repositories/feedback.repository';
+import { FeedbackModel, PaginatedFeedbackModel } from './models/feedback.model';
+import {
+  FeedbackPaginationDto,
+  GetAllFeedbacksFilterDto,
+  GetAllFeedbacksFilterOrderBy,
+} from './dto/get-all-feedbacks-filter.dto';
 import { FeedbackEntity } from './entities/feedback.entity';
-import { FeedbackBuilder } from './builders/feedback.builder';
+import { CursorService } from '@/common/modules/cursor/cursor.service';
+import { FeedbackMapper } from './mapper/feedback.mapper';
 
 @Injectable()
 export class FeedbackService {
+  private logger = new Logger(FeedbackService.name);
   constructor(
-    @InjectRepository(FeedbackEntity)
-    private feedbacksRepository: Repository<FeedbackEntity>
+    private readonly feedbackRepository: FeedbackRepository,
+    private cursorService: CursorService
   ) {}
-  async findAll(): Promise<FeedbackEntity[]> {
-    return await this.feedbacksRepository.find();
-  }
-  async findById(id: number): Promise<FeedbackEntity> {
-    return await this.feedbacksRepository.findOneBy({
-      id,
+
+  async handleGetAllFeedbacks(
+    workspaceId: string,
+    filter: GetAllFeedbacksFilterDto,
+    { take, cursor }: FeedbackPaginationDto,
+    orderBy: GetAllFeedbacksFilterOrderBy
+  ): Promise<PaginatedFeedbackModel> {
+    const where = {
+      workspaceId,
+      ...filter,
+    };
+    const takePlusOne = take + 1;
+    const list = await this.feedbackRepository.findMany({
+      where,
+      take: takePlusOne,
+      orderBy: {
+        [orderBy.key]: orderBy.type,
+      },
+      ...this.cursorService.createCursorObject(cursor),
     });
-  }
-  async create(
-    feedbackData: FeedbackEntity,
-    projectId: string
-  ): Promise<FeedbackEntity> {
-    const feedback = new FeedbackBuilder()
-      .setProjectId(projectId)
-      .setEmail(feedbackData.email)
-      .setMessage(feedbackData.message)
-      .setScreenShotUrls(feedbackData.screenshotUrls)
-      .setUserAgent(feedbackData.userAgent)
-      .setStatus(feedbackData.status)
-      .setType(feedbackData.type)
-      .setTags(feedbackData.tags)
-      .build();
-    return await this.feedbacksRepository.save(feedback);
-  }
-  async update(feedback: FeedbackEntity): Promise<FeedbackEntity> {
-    return await this.feedbacksRepository.save(feedback);
+    const totalCount =
+      list.length > 0 ? await this.feedbackRepository.count({ where }) : 0;
+
+    return this.cursorService.createPaginationResponse(
+      list,
+      orderBy.key,
+      take,
+      totalCount,
+      FeedbackMapper.toModel
+    );
   }
 }
