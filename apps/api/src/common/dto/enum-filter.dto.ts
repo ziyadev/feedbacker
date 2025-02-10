@@ -16,21 +16,19 @@ export interface IEnumFilterType<TEnum> {
   notIn?: Array<keyof TEnum>;
 }
 
-export function EnumTypeFilter<TEnum>(
-  enumType: any
+export function EnumTypeFilter<TEnum >(
+  enumType:TEnum
 ): Type<IEnumFilterType<TEnum>> {
   @InputType()
   class EnumFilter {
-    @Field(() => enumType, { nullable: true })
+    @Field(() => enumType as Type<TEnum>, { nullable: true })
     equals?: keyof TEnum;
 
-    @Field(() => [enumType], { nullable: true })
+    @Field(() => [enumType] )
     in?: Array<keyof TEnum>;
 
-    @Field(() => [enumType], { nullable: true })
+    @Field(() => [enumType])
     notIn?: Array<keyof TEnum>;
   }
   return EnumFilter as Type<IEnumFilterType<TEnum>>;
 }
-
-// example usage

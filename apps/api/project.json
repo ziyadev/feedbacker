@@ -1,15 +1,14 @@
-
 {
   "name": "api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api",
   "projectType": "application",
   "targets": {
-     "serve": {
+    "serve": {
       "executor": "nx:run-script",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "development",
-       "dependsOn": ["^build"],
+      "dependsOn": ["^build", "lint"],
       "options": {
         "script": "start:dev",
         "args": ["node-env=production"],
@@ -19,8 +18,15 @@
         "development": {},
         "production": {}
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/api/**/*.ts"],
+        "fix": true
+      }
     }
-
   },
   "tags": []
 }

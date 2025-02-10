@@ -14,6 +14,6 @@ export class AbstractErrorsBuilder<T extends Error, K extends Error['code']> {
     return this;
   }
   build(): T[] | null {
-    return [...this.errors].length ? [...this.errors].map(([_, v]) => v) : null;
+    return [...this.errors].length ? [...this.errors].map(([, v]) => v) : null;
   }
 }

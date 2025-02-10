@@ -47,7 +47,7 @@ export class EmailService {
       to: email,
       from: 'Acme <onboarding@resend.dev>',
       subject: 'Workspace Invitation',
-      text: `You have been invited to join ${workspaceName} workspace. Please click the link below to accept the invitation.`,
+      text: `You have been invited to join ${workspaceName} workspace. Please click the link below to accept the invitation. ${url}`,
     });
     return !!send_email.data;
   }

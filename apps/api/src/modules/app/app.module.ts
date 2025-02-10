@@ -13,7 +13,6 @@ import { StorageModule } from '../storage/storage.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CursorService } from '@/common/modules/cursor/cursor.service';
 import { FeedbackModule } from '../feedback/feedback.module';
 @Module({
   imports: [

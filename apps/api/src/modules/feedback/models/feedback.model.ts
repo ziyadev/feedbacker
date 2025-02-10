@@ -1,4 +1,3 @@
-import GraphQLJSON from 'graphql-type-json';
 import { Field, ObjectType, Int, registerEnumType, ID } from '@nestjs/graphql';
 import { Paginated } from '@/common/models/pagination.model';
 
@@ -46,8 +45,8 @@ export class FeedbackModel {
   @Field(() => ID)
   id: string;
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  metadata: Record<string, any>;
+  @Field(() => [KeyValuePair], { nullable: true })
+  metadata: KeyValuePair[];
 
   @Field(() => [KeyValuePair], { nullable: true })
   userMetadata: KeyValuePair[];

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CursorService {
-  createCursorObject(cursor: any): any {
+  createCursorObject<T>(cursor: T) {
     if (!cursor) {
       return;
     }
@@ -22,10 +22,9 @@ export class CursorService {
 
   createPaginationResponse<T>(
     list: T[],
-    orderByKey: string,
     take: number,
     totalCount: number,
-    mapper: (item: T) => any
+    mapper: <Schema>(item: T) => Schema
   ) {
     if (list.length === 0) {
       return {

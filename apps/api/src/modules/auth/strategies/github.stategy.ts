@@ -1,8 +1,6 @@
 import { Env } from '@/common/config/env';
 import {
   Injectable,
-  InternalServerErrorException,
-  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -11,7 +9,6 @@ import { AuthProvider } from '../interface/auth.interface';
 import { AuthService } from '@/modules/auth/auth.service';
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy) {
-  private logger = new Logger(GithubStrategy.name);
   constructor(
     private configService: ConfigService,
     private authService: AuthService
@@ -32,7 +29,7 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: any
+    done: <T>(...args:T[])=> void
   ) {
     const user = await this.authService.handleOAuthCallback({
       name: profile.username,

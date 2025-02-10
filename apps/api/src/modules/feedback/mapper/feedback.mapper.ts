@@ -10,8 +10,15 @@ export class FeedbackMapper {
   static toModel(entity: FeedbackEntity): FeedbackModel {
     return {
       id: entity.id,
-      metadata: JSON.parse(entity.metadata.toString()),
-      userMetadata: JSON.parse(entity.userMetadata.toString()),
+      metadata: Object.keys(entity.metadata).map((key) => ({
+        key,
+        value: entity.metadata[key],
+      })),
+      userMetadata: Object.keys(entity.userMetadata).map((key) => ({
+        key,
+        value: entity.userMetadata[key],
+      })),
+
       rating: entity.rating,
       type: entity.type as FeedbackType,
       comment: entity.comment,

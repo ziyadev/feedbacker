@@ -1,4 +1,4 @@
 export interface IToken {
-  generate: (data: any) => Promise<string>;
-  validate: (token: string) => Promise<any>;
+  generate: <TData>(data: TData) => Promise<string>;
+  validate: (token: string) => Promise<boolean>;
 }

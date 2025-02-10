@@ -1,5 +1,5 @@
 import { EnumTypeFilter, OrderByType } from '@/common/dto/enum-filter.dto';
-import { Args, Field, ID, InputType, registerEnumType } from '@nestjs/graphql';
+import {  Field, ID, InputType, registerEnumType } from '@nestjs/graphql';
 import {
   FeedbackModel,
   FeedbackPriority,
@@ -10,7 +10,6 @@ import { StringFilter } from '@/common/dto/string-filter.dto';
 import { IntFilter } from '@/common/dto/int-filter.dto';
 import { DateTimeFilter } from '@/common/dto/date-time-filter.dto';
 import { CreateCursorPagination } from '@/common/dto/cursor-pagination.dto';
-import { IsEnum } from 'class-validator';
 
 @InputType()
 class FeedbackTypeFilter extends EnumTypeFilter(FeedbackType) {}

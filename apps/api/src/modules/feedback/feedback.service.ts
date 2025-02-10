@@ -1,12 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FeedbackRepository } from '../database/repositories/feedback.repository';
-import { FeedbackModel, PaginatedFeedbackModel } from './models/feedback.model';
+import {  PaginatedFeedbackModel } from './models/feedback.model';
 import {
   FeedbackPaginationDto,
   GetAllFeedbacksFilterDto,
   GetAllFeedbacksFilterOrderBy,
 } from './dto/get-all-feedbacks-filter.dto';
-import { FeedbackEntity } from './entities/feedback.entity';
 import { CursorService } from '@/common/modules/cursor/cursor.service';
 import { FeedbackMapper } from './mapper/feedback.mapper';
 
@@ -42,7 +41,6 @@ export class FeedbackService {
 
     return this.cursorService.createPaginationResponse(
       list,
-      orderBy.key,
       take,
       totalCount,
       FeedbackMapper.toModel

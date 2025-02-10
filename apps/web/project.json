@@ -1,15 +1,14 @@
-
 {
   "name": "web",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web",
   "projectType": "application",
   "targets": {
-     "serve": {
+    "serve": {
       "executor": "nx:run-script",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "development",
-       "dependsOn": ["^build"],
+      "dependsOn": ["^build"],
       "options": {
         "script": "dev",
         "args": ["node-env=production"],
@@ -22,11 +21,18 @@
     },
     "code-gen": {
       "executor": "nx:run-script",
-       "options": {
+      "options": {
         "script": "code-gen"
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
+        "fix": true
+      }
     }
-
   },
   "tags": []
 }
