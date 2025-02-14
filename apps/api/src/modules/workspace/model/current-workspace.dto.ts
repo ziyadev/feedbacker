@@ -4,9 +4,8 @@ import { WorkspaceModel } from './workspace.model';
 
 @ObjectType()
 class AdditionType {
-
   @Field(() => WorkspaceMemberRole)
-  role:WorkspaceMemberRole;
+  role: WorkspaceMemberRole;
 }
 
 @ObjectType()

@@ -24,7 +24,7 @@ export class CursorService {
     list: T[],
     take: number,
     totalCount: number,
-    mapper: <Schema>(item: T) => Schema
+    mapper: (item: T) => any
   ) {
     if (list.length === 0) {
       return {

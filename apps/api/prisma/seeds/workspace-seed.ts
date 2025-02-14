@@ -1,11 +1,12 @@
+import { WorkspaceMemberRole } from '@/modules/workspace/model/workspace-member.model';
 import {
-    rand,
-    randEmail,
-    randFullName,
-    randJobDescriptor,
-    randSlug,
+  rand,
+  randEmail,
+  randFullName,
+  randJobDescriptor,
+  randSlug,
 } from '@ngneat/falso';
-import { PrismaClient, WorkspaceMemberRole } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 export default async function workspaceSeed(prisma: PrismaClient) {
   const users = await prisma.user.findMany();
   users.forEach(async (user) => {
@@ -33,7 +34,7 @@ export default async function workspaceSeed(prisma: PrismaClient) {
             id: workspace.id,
           },
         },
-        role: WorkspaceMemberRole.admin,
+        role: WorkspaceMemberRole.ADMIN,
       },
     });
     await prisma.workspaceInvitation.create({
@@ -44,9 +45,9 @@ export default async function workspaceSeed(prisma: PrismaClient) {
           },
         },
         role: rand([
-          WorkspaceMemberRole.viewer,
-          WorkspaceMemberRole.admin,
-          WorkspaceMemberRole.editor,
+          WorkspaceMemberRole.VIEWER,
+          WorkspaceMemberRole.ADMIN,
+          WorkspaceMemberRole.EDITOR,
         ]),
         email: randEmail(),
         expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),

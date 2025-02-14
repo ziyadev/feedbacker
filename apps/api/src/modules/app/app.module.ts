@@ -29,6 +29,9 @@ import { FeedbackModule } from '../feedback/feedback.module';
       context: ({ req }) => ({ req }),
       debug: true,
       playground: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
     AuthModule,
     UserModule,

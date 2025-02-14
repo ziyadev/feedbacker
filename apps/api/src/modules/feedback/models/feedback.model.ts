@@ -1,5 +1,6 @@
-import { Field, ObjectType, Int, registerEnumType, ID } from '@nestjs/graphql';
 import { Paginated } from '@/common/models/pagination.model';
+import { Field, ID, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { GraphQLDateTime } from 'graphql-scalars';
 
 export enum FeedbackStatus {
   OPEN = 'open',
@@ -72,14 +73,14 @@ export class FeedbackModel {
   @Field(() => String)
   country: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   summary: string;
 
-  @Field(() => String)
-  createdAt: string;
+  @Field(() => GraphQLDateTime)
+  createdAt: Date;
 
-  @Field(() => String)
-  updatedAt: string;
+  @Field(() => GraphQLDateTime)
+  updatedAt: Date;
 }
 
 @ObjectType()

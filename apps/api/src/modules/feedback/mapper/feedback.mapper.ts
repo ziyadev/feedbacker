@@ -8,15 +8,17 @@ import {
 
 export class FeedbackMapper {
   static toModel(entity: FeedbackEntity): FeedbackModel {
+    const parsedMetadata = JSON.parse(entity.metadata.toString());
+    const parsedUserMetadata = JSON.parse(entity.userMetadata.toString());
     return {
       id: entity.id,
-      metadata: Object.keys(entity.metadata).map((key) => ({
+      metadata: Object.keys(parsedMetadata).map((key) => ({
         key,
-        value: entity.metadata[key],
+        value: parsedMetadata[key],
       })),
-      userMetadata: Object.keys(entity.userMetadata).map((key) => ({
+      userMetadata: Object.keys(parsedUserMetadata).map((key) => ({
         key,
-        value: entity.userMetadata[key],
+        value: parsedUserMetadata[key],
       })),
 
       rating: entity.rating,
@@ -27,8 +29,8 @@ export class FeedbackMapper {
       pageUrl: entity.pageUrl,
       country: entity.country,
       summary: entity.summary,
-      createdAt: entity.createdAt.toString(),
-      updatedAt: entity.updatedAt.toString(),
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     };
   }
 }

@@ -1,9 +1,4 @@
 import {
-  FeedbackPriority,
-  FeedbackStatus,
-  FeedbackType,
-} from '@/modules/feedback/models/feedback.model';
-import {
   rand,
   randBrowser,
   randCountry,
@@ -16,6 +11,26 @@ import {
   randUuid,
 } from '@ngneat/falso';
 import { PrismaClient } from '@prisma/client';
+export enum FeedbackStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
+  IN_QA = 'in_qa',
+  TODO = 'todo',
+  BACKLOG = 'backlog',
+  RESOLVED = 'resolved',
+}
+export enum FeedbackPriority {
+  URGRGENT = 'urgent',
+  HIGH = 'high',
+  NEUTRAL = 'neutral',
+  LOW = 'low',
+}
+export enum FeedbackType {
+  BUG = 'bug',
+  FEATURE = 'feature',
+  QUESTION = 'question',
+  GENERAL = 'general',
+}
 export default async function feedbackSeed(prisma: PrismaClient) {
   const workspaces = await prisma.workspace.findMany();
   workspaces.forEach(async (workspace) => {
@@ -62,7 +77,9 @@ export default async function feedbackSeed(prisma: PrismaClient) {
             device: rand(['desktop', 'mobile', 'tablet', 'other', 'unknown']),
             browser: randBrowser(),
             browserVersion: randNumber({ min: 1, max: 10 }),
-            browserResolution: randResolution(),
+            browserResolution: `${randResolution().height}X${
+              randResolution().width
+            }`,
             os: rand(['windows', 'mac', 'linux', 'android', 'ios', 'other']),
             osVersion: randNumber({ min: 1, max: 10 }),
           }),

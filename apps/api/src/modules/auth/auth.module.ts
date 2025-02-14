@@ -13,12 +13,8 @@ import { AuthService } from './auth.service';
 import { OauthMiddleware } from './middleware/oauth.middleware';
 import { GithubStrategy } from './strategies/github.stategy';
 import { GoogleStrategy } from './strategies/google.strategy';
-import {
-    SessionStrategy,
-} from './strategies/session.strategy';
-import {
-    WorkspaceStrategy,
-} from './strategies/workspace.strategy';
+import { SessionStrategy } from './strategies/session.strategy';
+import { WorkspaceStrategy } from './strategies/workspace.strategy';
 
 @Module({
   imports: [

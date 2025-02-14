@@ -1,7 +1,5 @@
 import { Env } from '@/common/config/env';
-import {
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, StrategyOption } from 'passport-github2';
@@ -29,7 +27,7 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: <T>(...args:T[])=> void
+    done: <T>(...args: T[]) => void
   ) {
     const user = await this.authService.handleOAuthCallback({
       name: profile.username,

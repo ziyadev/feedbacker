@@ -1,5 +1,5 @@
 import { EnumTypeFilter, OrderByType } from '@/common/dto/enum-filter.dto';
-import {  Field, ID, InputType, registerEnumType } from '@nestjs/graphql';
+import { Field, ID, InputType, registerEnumType } from '@nestjs/graphql';
 import {
   FeedbackModel,
   FeedbackPriority,

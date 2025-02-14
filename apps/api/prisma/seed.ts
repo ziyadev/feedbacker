@@ -4,15 +4,14 @@ import userSeed from './seeds/user-seed';
 import workspaceSeed from './seeds/workspace-seed';
 async function main() {
   const prisma = new PrismaClient({
-    log: ['info',"error","info"],
-
+    log: ['info', 'error', 'info'],
   });
-  console.log("Generating Seed...");
-  console.log("Generating userSeed")
-  await userSeed(prisma);
-  console.log("Generating workspaceSeed")
-  await workspaceSeed(prisma);
-  console.log("Generating feedbackSeed")
+  // console.log('Generating Seed...');
+  // console.log('Generating userSeed');
+  // await userSeed(prisma);
+  // console.log('Generating workspaceSeed');
+  // await workspaceSeed(prisma);
+  // console.log('Generating feedbackSeed');
   await feedbackSeed(prisma);
 }
 main().catch((err) => {

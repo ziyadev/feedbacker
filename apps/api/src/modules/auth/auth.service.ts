@@ -134,7 +134,7 @@ export class AuthService {
 
     this.saveSession(session, sessionData);
     return MutateResultFactory.ok({
-      user:UserMapper.toModel(user),
+      user: UserMapper.toModel(user),
     });
   }
   /* handle credentials signup */

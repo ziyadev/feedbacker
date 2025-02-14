@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FeedbackRepository } from '../database/repositories/feedback.repository';
-import {  PaginatedFeedbackModel } from './models/feedback.model';
+import { PaginatedFeedbackModel } from './models/feedback.model';
 import {
   FeedbackPaginationDto,
   GetAllFeedbacksFilterDto,
@@ -27,7 +27,7 @@ export class FeedbackService {
       workspaceId,
       ...filter,
     };
-    const takePlusOne = take + 1;
+    const takePlusOne = (take || 10) + 1;
     const list = await this.feedbackRepository.findMany({
       where,
       take: takePlusOne,

@@ -8,7 +8,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { passwordHash } from '../../src/modules/auth/utils/password-hash';
 export default async function userSeed(prisma: PrismaClient) {
-  const hashedPassword = await passwordHash('NewPassword123@.');
+  const hashedPassword = await passwordHash('securePassowrd123.@');
   Array.from({ length: 1000 }).forEach(async () => {
     await createUser(hashedPassword, prisma);
   });
@@ -40,5 +40,4 @@ async function createUser(hashedPassword: string, prisma: PrismaClient) {
       },
     },
   });
-
 }
