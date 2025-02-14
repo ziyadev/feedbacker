@@ -1,6 +1,6 @@
 // Tremor Select [v0.0.3]
-import { DateRange } from "react-day-picker"
-import { format } from "date-fns"
+import { DateRange } from 'react-day-picker';
+import { format } from 'date-fns';
 
 import * as SelectPrimitives from '@radix-ui/react-select';
 import {
@@ -22,7 +22,7 @@ SelectGroup.displayName = 'SelectGroup';
 const SelectItemPeriod = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitives.Item> & {
-    period?: DateRange | undefined
+    period?: DateRange | undefined;
   }
 >(({ className, children, period, ...props }, forwardedRef) => {
   return (
@@ -30,16 +30,16 @@ const SelectItemPeriod = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         // base
-        "relative flex cursor-pointer items-center rounded py-2 pl-8 pr-3 outline-none transition-colors data-[state=checked]:font-semibold sm:text-sm",
+        'relative flex cursor-pointer items-center rounded py-2 pl-8 pr-3 outline-none transition-colors data-[state=checked]:font-semibold sm:text-sm',
         // text color
-        "text-gray-900 dark:text-gray-50",
+        'text-gray-900 dark:text-gray-50',
         // disabled
-        "data-[disabled]:pointer-events-none data-[disabled]:text-gray-400 data-[disabled]:hover:bg-none dark:data-[disabled]:text-gray-600",
+        'data-[disabled]:pointer-events-none data-[disabled]:text-gray-400 data-[disabled]:hover:bg-none dark:data-[disabled]:text-gray-600',
         // focus
-        "focus-visible:bg-gray-100 focus-visible:dark:bg-gray-900",
+        'focus-visible:bg-gray-100 focus-visible:dark:bg-gray-900',
         // hover
-        "hover:bg-gray-100 hover:dark:bg-gray-900",
-        className,
+        'hover:bg-gray-100 hover:dark:bg-gray-900',
+        className
       )}
       {...props}
     >
@@ -59,17 +59,17 @@ const SelectItemPeriod = React.forwardRef<
         <span>
           {period?.from && period?.to && (
             <span className="whitespace-nowrap font-normal text-gray-400">
-              {format(period.from, "MMM d, yyyy")} –{" "}
-              {format(period.to, "MMM d, yyyy")}
+              {format(period.from, 'MMM d, yyyy')} –{' '}
+              {format(period.to, 'MMM d, yyyy')}
             </span>
           )}
         </span>
       </div>
     </SelectPrimitives.Item>
-  )
-})
+  );
+});
 
-SelectItemPeriod.displayName = "SelectItemPeriod"
+SelectItemPeriod.displayName = 'SelectItemPeriod';
 
 const SelectValue = SelectPrimitives.Value;
 SelectValue.displayName = 'SelectValue';
@@ -218,7 +218,7 @@ const SelectContent = React.forwardRef<
           className={cx(
             'p-1',
             position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]'
+              'h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]'
           )}
         >
           {children}
@@ -314,5 +314,6 @@ export {
   SelectItem,
   SelectSeparator,
   SelectTrigger,
-  SelectValue, SelectItemPeriod
+  SelectValue,
+  SelectItemPeriod,
 };

@@ -13,6 +13,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: any; output: any; }
+  Timestamp: { input: any; output: any; }
 };
 
 export type ChangePasswordDto = {
@@ -170,6 +171,86 @@ export type CurrentWorkspaceDto = {
   updatedAt: Scalars['String']['output'];
 };
 
+export type DateTimeFilter = {
+  equals?: InputMaybe<Scalars['Timestamp']['input']>;
+  gt?: InputMaybe<Scalars['Timestamp']['input']>;
+  gte?: InputMaybe<Scalars['Timestamp']['input']>;
+  in?: InputMaybe<Array<Scalars['Timestamp']['input']>>;
+  lt?: InputMaybe<Scalars['Timestamp']['input']>;
+  lte?: InputMaybe<Scalars['Timestamp']['input']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['Timestamp']['input']>>;
+};
+
+export type FeedbackModel = {
+  __typename?: 'FeedbackModel';
+  comment: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  metadata?: Maybe<Array<KeyValuePair>>;
+  pageUrl: Scalars['String']['output'];
+  priority: FeedbackPriority;
+  rating?: Maybe<Scalars['Int']['output']>;
+  status: FeedbackStatus;
+  summary?: Maybe<Scalars['String']['output']>;
+  type: FeedbackType;
+  updatedAt: Scalars['DateTime']['output'];
+  userMetadata?: Maybe<Array<KeyValuePair>>;
+};
+
+export type FeedbackModelEdge = {
+  __typename?: 'FeedbackModelEdge';
+  cursor: Scalars['String']['output'];
+  node: FeedbackModel;
+};
+
+export type FeedbackPaginationDto = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  take: Scalars['Int']['input'];
+};
+
+export enum FeedbackPriority {
+  High = 'HIGH',
+  Low = 'LOW',
+  Neutral = 'NEUTRAL',
+  Urgrgent = 'URGRGENT'
+}
+
+export type FeedbackPriorityFilter = {
+  equals?: InputMaybe<FeedbackPriority>;
+  in: Array<FeedbackPriority>;
+  notIn: Array<FeedbackPriority>;
+};
+
+export enum FeedbackStatus {
+  Backlog = 'BACKLOG',
+  Closed = 'CLOSED',
+  InQa = 'IN_QA',
+  Open = 'OPEN',
+  Resolved = 'RESOLVED',
+  Todo = 'TODO'
+}
+
+export type FeedbackStatusFilter = {
+  equals?: InputMaybe<FeedbackStatus>;
+  in: Array<FeedbackStatus>;
+  notIn: Array<FeedbackStatus>;
+};
+
+export enum FeedbackType {
+  Bug = 'BUG',
+  Feature = 'FEATURE',
+  General = 'GENERAL',
+  Question = 'QUESTION'
+}
+
+export type FeedbackTypeFilter = {
+  equals?: InputMaybe<FeedbackType>;
+  in: Array<FeedbackType>;
+  notIn: Array<FeedbackType>;
+};
+
 export enum FileType {
   ImageGif = 'IMAGE_GIF',
   ImageJpeg = 'IMAGE_JPEG',
@@ -178,14 +259,59 @@ export enum FileType {
   VideoWebm = 'VIDEO_WEBM'
 }
 
+export type GetAllFeedbacksFilterDto = {
+  country?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  pageUrl?: InputMaybe<StringFilter>;
+  priority?: InputMaybe<FeedbackPriorityFilter>;
+  rating?: InputMaybe<IntFilter>;
+  status?: InputMaybe<FeedbackStatusFilter>;
+  type?: InputMaybe<FeedbackTypeFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type GetAllFeedbacksFilterOrderBy = {
+  key: GetAllFeedbacksFilterOrderByKeys;
+  type: OrderByType;
+};
+
+export enum GetAllFeedbacksFilterOrderByKeys {
+  Country = 'COUNTRY',
+  CreatedAt = 'CREATED_AT',
+  Id = 'ID',
+  Priority = 'PRIORITY',
+  Rating = 'RATING',
+  Status = 'STATUS',
+  Type = 'TYPE',
+  UpdatedAt = 'UPDATED_AT'
+}
+
 export type GetPresignedUrlDto = {
   fileName: Scalars['String']['input'];
   mimeType: FileType;
 };
 
+export type IntFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
 export type IsWorkspaceSlugValidDto = {
   /** Slug of the workspace it must be unique */
   slug: Scalars['String']['input'];
+};
+
+export type KeyValuePair = {
+  __typename?: 'KeyValuePair';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type Mutation = {
@@ -260,13 +386,78 @@ export type MutationSendWorkspaceInvitationArgs = {
   input: CreateWorkspaceInvitationDto;
 };
 
+export type NestedDateTimeFilter = {
+  equals?: InputMaybe<Scalars['Timestamp']['input']>;
+  gt?: InputMaybe<Scalars['Timestamp']['input']>;
+  gte?: InputMaybe<Scalars['Timestamp']['input']>;
+  in?: InputMaybe<Array<Scalars['Timestamp']['input']>>;
+  lt?: InputMaybe<Scalars['Timestamp']['input']>;
+  lte?: InputMaybe<Scalars['Timestamp']['input']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['Timestamp']['input']>>;
+};
+
+export type NestedIntFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type NestedStringFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum OrderByType {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
+export type PaginatedFeedbackModel = {
+  __typename?: 'PaginatedFeedbackModel';
+  edges?: Maybe<Array<FeedbackModelEdge>>;
+  endCursor?: Maybe<Scalars['String']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  nodes?: Maybe<Array<FeedbackModel>>;
+  startCursor?: Maybe<Scalars['String']['output']>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  getFeedbacks: PaginatedFeedbackModel;
   /** Get the currently logged in user */
   user: UserModel;
   /** Get the currently workspace */
   workspace: CurrentWorkspaceDto;
 };
+
+
+export type QueryGetFeedbacksArgs = {
+  filter?: InputMaybe<GetAllFeedbacksFilterDto>;
+  orderBy?: InputMaybe<GetAllFeedbacksFilterOrderBy>;
+  pagination?: InputMaybe<FeedbackPaginationDto>;
+};
+
+export enum QueryMode {
+  Default = 'default',
+  Insensitive = 'insensitive'
+}
 
 export type SendEmailResetPasswordLinkDto = {
   /** Email address */
@@ -291,12 +482,28 @@ export type SendResetPasswordEmailModel = {
   success?: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type StringFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  mode?: InputMaybe<QueryMode>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UserModel = {
   __typename?: 'UserModel';
   /** URL of the user's profile avatar image */
   avatar?: Maybe<Scalars['String']['output']>;
   /** Timestamp of when the user account was created */
-  createdAt: Scalars['DateTime']['output'];
+  createdAt: Scalars['Timestamp']['output'];
   /** Email address of the user */
   email: Scalars['String']['output'];
   /** Whether the user has verified their email address */
@@ -306,7 +513,7 @@ export type UserModel = {
   /** Full name of the user */
   name: Scalars['String']['output'];
   /** Timestamp of when the user account was last updated */
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt: Scalars['Timestamp']['output'];
 };
 
 export type UserProfileModel = {
@@ -323,12 +530,12 @@ export type UserProfileModel = {
 
 export type WorkspaceInvitationModel = {
   __typename?: 'WorkspaceInvitationModel';
-  createdAt: Scalars['DateTime']['output'];
+  createdAt: Scalars['Timestamp']['output'];
   email: Scalars['String']['output'];
   id: Scalars['String']['output'];
   role: WorkspaceMemberRole;
   status: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
+  updatedAt: Scalars['Timestamp']['output'];
   workspaceId: Scalars['String']['output'];
 };
 
@@ -381,6 +588,15 @@ export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'UserModel', id: string, name: string, email: string, emailVerified: boolean, createdAt: any, updatedAt: any, avatar?: string | null } };
+
+export type GetFeedbacksQueryVariables = Exact<{
+  filter?: InputMaybe<GetAllFeedbacksFilterDto>;
+  pagination?: InputMaybe<FeedbackPaginationDto>;
+  orderBy?: InputMaybe<GetAllFeedbacksFilterOrderBy>;
+}>;
+
+
+export type GetFeedbacksQuery = { __typename?: 'Query', getFeedbacks: { __typename?: 'PaginatedFeedbackModel', totalCount: number, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null, nodes?: Array<{ __typename?: 'FeedbackModel', id: string, rating?: number | null, type: FeedbackType, comment: string, priority: FeedbackPriority, status: FeedbackStatus, pageUrl: string, country: string, summary?: string | null, createdAt: any, updatedAt: any, userMetadata?: Array<{ __typename?: 'KeyValuePair', key: string, value: string }> | null, metadata?: Array<{ __typename?: 'KeyValuePair', key: string, value: string }> | null }> | null } };
 
 export type CreateUserProfileMutationVariables = Exact<{
   input: CreateUserProfileDto;

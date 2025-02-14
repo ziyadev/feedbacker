@@ -1,17 +1,17 @@
-import { Badge, ProgressBar } from "@feedbacker/ui"
+import { Badge, ProgressBar } from '@feedbacker/ui';
 
-import { KpiEntry } from "./overview-analytics"
+import { KpiEntry } from './overview-analytics';
 
 export type CardProps = {
-  title: string
-  change: string
-  value: string
-  valueDescription: string
-  ctaDescription: string
-  ctaText: string
-  ctaLink: string
-  data: KpiEntry[]
-}
+  title: string;
+  change: string;
+  value: string;
+  valueDescription: string;
+  ctaDescription: string;
+  ctaText: string;
+  ctaLink: string;
+  data: KpiEntry[];
+};
 
 export function ProgressBarCard({
   title,
@@ -64,7 +64,7 @@ export function ProgressBarCard({
         </div>
         <div>
           <p className="mt-6 text-xs text-gray-500">
-            {ctaDescription}{" "}
+            {ctaDescription}{' '}
             <a href={ctaLink} className="text-indigo-600 dark:text-indigo-400">
               {ctaText}
             </a>
@@ -72,5 +72,5 @@ export function ProgressBarCard({
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -9,8 +9,6 @@ export default function FeedbackListPage() {
         description="Manage and analyze all user-submitted feedback"
       />
 
-
-
       <FeedbackTable />
     </>
   );

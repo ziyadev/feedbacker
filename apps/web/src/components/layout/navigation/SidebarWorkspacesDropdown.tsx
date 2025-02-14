@@ -3,14 +3,14 @@
 import { useWorkspace } from '@/features/workspace/hooks/useWorkspace';
 import { cx, focusInput } from '@/lib/utils';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-    Skeleton,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Skeleton,
 } from '@feedbacker/ui';
 import { RiExpandUpDownLine } from '@remixicon/react';
 import React from 'react';
@@ -174,7 +174,6 @@ export const WorkspacesDropdownMobile = () => {
     return (
       <button className="flex items-center gap-x-1.5 rounded-md p-2 hover:bg-gray-100 focus:outline-none hover:dark:bg-gray-900">
         <Skeleton className="size-8 aspect-square rounded-md" />
-
       </button>
     );
   }

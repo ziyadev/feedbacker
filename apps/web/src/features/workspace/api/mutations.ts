@@ -26,7 +26,6 @@ export const IS_WORKSPACE_SLUG_VALID = gql(`
   }
 `);
 
-
 export const SEND_WORKSPACE_INVITATION = gql(`
   mutation SendWorkspaceInvitation($input: CreateWorkspaceInvitationDto!) {
       sendWorkspaceInvitation(input: $input) {
@@ -45,4 +44,4 @@ export const SEND_WORKSPACE_INVITATION = gql(`
           }
       }
   }
-`)
+`);

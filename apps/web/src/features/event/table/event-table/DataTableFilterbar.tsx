@@ -8,7 +8,8 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,DateRange
+  SelectValue,
+  DateRange,
 } from '@feedbacker/ui';
 import { ComponentProps, useState } from 'react';
 
@@ -42,11 +43,7 @@ export function Filterbar({ className, ...props }: ComponentProps<'div'>) {
         <Searchbar placeholder="Search for an exact event name... " />
       </div>
       <div className="flex items-center gap-2">
-        <DateRangePicker
-          value={dateRange}
-          onChange={setDateRange}
-
-        />
+        <DateRangePicker value={dateRange} onChange={setDateRange} />
       </div>
     </div>
   );

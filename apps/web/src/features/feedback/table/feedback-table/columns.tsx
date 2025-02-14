@@ -1,21 +1,21 @@
 'use client';
 
-import { formatters } from '@/lib/utils';
+import { FeedbackModel } from '@/graphql/types';
 import {
   Avatar,
   AvatarFallback,
   Badge,
   BadgeProps,
   Checkbox,
+  Tooltip,
 } from '@feedbacker/ui';
+import { timeAgo } from '@repo/utils';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '../../../../components/ui/data-table/DataTableColumnHeader';
-import { DataTableRowActions } from '../../../../components/ui/data-table/DataTableRowActions';
-import { statuses } from './data/data';
-import { Usage } from './data/schema';
-import { ConditionFilter } from './DataTableFilter';
+import { DataTableRowActions } from './DataTableRowActions';
+import { priorities, statuses } from './data/data';
 
-const columnHelper = createColumnHelper<Usage>();
+const columnHelper = createColumnHelper<FeedbackModel>();
 
 export const columns = [
   columnHelper.display({
@@ -48,7 +48,7 @@ export const columns = [
       displayName: 'Select',
     },
   }),
-  columnHelper.accessor('user', {
+  columnHelper.accessor('metadata', {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User" />
     ),
@@ -58,17 +58,24 @@ export const columns = [
       displayName: 'User',
     },
     cell: ({ row }) => {
+      const findEmail = row.original.metadata?.find(
+        (m) => m.key === 'email'
+      )?.value;
+      const id = row.original.metadata?.find((m) => m.key === 'userId')?.value;
+      const user = findEmail || id;
+
       return (
+        <Tooltip content={id}>
         <div className="flex items-center gap-2">
           <Avatar className="size-8">
-            <AvatarFallback>
-              {row.original.user.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
+              <AvatarFallback>{user?.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <span className="text-left truncate whitespace-nowrap max-w-48">
-            {row.original.user}
+              {user}
           </span>
         </div>
+        </Tooltip>
+
       );
     },
   }),
@@ -97,7 +104,7 @@ export const columns = [
       );
     },
   }),
-  columnHelper.accessor('region', {
+  columnHelper.accessor('country', {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Region" />
     ),
@@ -108,14 +115,14 @@ export const columns = [
     },
     filterFn: 'arrIncludesSome',
   }),
-  columnHelper.accessor('stability', {
+  columnHelper.accessor('rating', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Stability" />
+      <DataTableColumnHeader column={column} title="Rating" />
     ),
     enableSorting: false,
     meta: {
       className: 'text-left',
-      displayName: 'Stability',
+      displayName: 'Rating',
     },
     cell: ({ getValue }) => {
       const value = getValue();
@@ -124,9 +131,9 @@ export const columns = [
         let category;
         if (number === 0) {
           category = 'zero';
-        } else if (number < 9) {
+        } else if (number < 2) {
           category = 'bad';
-        } else if (number >= 9 && number <= 15) {
+        } else if (number >= 3) {
           category = 'ok';
         } else {
           category = 'good';
@@ -150,10 +157,15 @@ export const columns = [
             <div className={`h-3.5 w-1 rounded-sm ${getBarClass(0)}`} />
             <div className={`h-3.5 w-1 rounded-sm ${getBarClass(1)}`} />
             <div className={`h-3.5 w-1 rounded-sm ${getBarClass(2)}`} />
+            <div className={`h-3.5 w-1 rounded-sm ${getBarClass(3)}`} />
+            <div className={`h-3.5 w-1 rounded-sm ${getBarClass(4)}`} />
           </div>
         );
       }
 
+      if (!value) {
+        return <span className="w-6">-</span>;
+      }
       return (
         <div className="flex items-center gap-0.5">
           <span className="w-6">{value}</span>
@@ -162,47 +174,39 @@ export const columns = [
       );
     },
   }),
-  columnHelper.accessor('costs', {
+  columnHelper.accessor('priority', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Costs" />
+      <DataTableColumnHeader column={column} title="Priority" />
     ),
     enableSorting: true,
     meta: {
-      className: 'text-right',
-      displayName: 'Costs',
+      className: 'text-left',
+      displayName: 'Priority',
     },
     cell: ({ getValue }) => {
+      const priority = priorities.find((item) => item.value === getValue());
+
+      if (!priority) {
+        return null;
+      }
+
       return (
-        <span className="font-medium">{formatters.currency(getValue())}</span>
+        <Badge variant={priority.variant as BadgeProps['variant']}>
+          {priority.label}
+        </Badge>
       );
     },
-    filterFn: (row, columnId, filterValue: ConditionFilter) => {
-      const value = row.getValue(columnId) as number;
-      const [min, max] = filterValue.value as [number, number];
-
-      switch (filterValue.condition) {
-        case 'is-equal-to':
-          return value == min;
-        case 'is-between':
-          return value >= min && value <= max;
-        case 'is-greater-than':
-          return value > min;
-        case 'is-less-than':
-          return value < min;
-        default:
-          return true;
-      }
-    },
   }),
-  columnHelper.accessor('lastEdited', {
+  columnHelper.accessor('updatedAt', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last edited" />
+      <DataTableColumnHeader column={column} title="Updated at" />
     ),
     enableSorting: false,
     meta: {
       className: 'tabular-nums',
-      displayName: 'Last edited',
+      displayName: 'Updated at',
     },
+    cell: ({ cell }) => <span>{timeAgo(cell.getValue(), { withAgo: true })}</span>,
   }),
   columnHelper.accessor('createdAt', {
     header: ({ column }) => (
@@ -213,6 +217,9 @@ export const columns = [
       className: 'tabular-nums',
       displayName: 'Created at',
     },
+    cell: ({ cell }) => <span>{new Date(cell.getValue()).toLocaleDateString('en-us', { weekday: "short", year: "numeric", month: "numeric", day: "numeric" })
+    }</span>,
+
   }),
   columnHelper.display({
     id: 'edit',
@@ -225,4 +232,4 @@ export const columns = [
     },
     cell: ({ row }) => <DataTableRowActions row={row} />,
   }),
-] as ColumnDef<Usage>[];
+] as ColumnDef<FeedbackModel>[];

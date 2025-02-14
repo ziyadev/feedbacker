@@ -1,5 +1,5 @@
-import { Badge } from "@feedbacker/ui"
-import { Button } from "@feedbacker/ui"
+import { Badge } from '@feedbacker/ui';
+import { Button } from '@feedbacker/ui';
 import {
   Dialog,
   DialogClose,
@@ -9,50 +9,50 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@feedbacker/ui"
-import { DropdownMenuItem } from "@feedbacker/ui"
-import { Input } from "@feedbacker/ui"
-import { Label } from "@feedbacker/ui"
-import { RadioCardGroup, RadioCardItem } from "@feedbacker/ui"
+} from '@feedbacker/ui';
+import { DropdownMenuItem } from '@feedbacker/ui';
+import { Input } from '@feedbacker/ui';
+import { Label } from '@feedbacker/ui';
+import { RadioCardGroup, RadioCardItem } from '@feedbacker/ui';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@feedbacker/ui"
+} from '@feedbacker/ui';
 
 export const databases: {
-  label: string
-  value: string
-  description: string
-  isRecommended: boolean
+  label: string;
+  value: string;
+  description: string;
+  isRecommended: boolean;
 }[] = [
-    {
-      label: "Base performance",
-      value: "base-performance",
-      description: "1/8 vCPU, 1 GB RAM",
-      isRecommended: true,
-    },
-    {
-      label: "Advanced performance",
-      value: "advanced-performance",
-      description: "1/4 vCPU, 2 GB RAM",
-      isRecommended: false,
-    },
-    {
-      label: "Turbo performance",
-      value: "turbo-performance",
-      description: "1/2 vCPU, 4 GB RAM",
-      isRecommended: false,
-    },
-  ]
+  {
+    label: 'Base performance',
+    value: 'base-performance',
+    description: '1/8 vCPU, 1 GB RAM',
+    isRecommended: true,
+  },
+  {
+    label: 'Advanced performance',
+    value: 'advanced-performance',
+    description: '1/4 vCPU, 2 GB RAM',
+    isRecommended: false,
+  },
+  {
+    label: 'Turbo performance',
+    value: 'turbo-performance',
+    description: '1/2 vCPU, 4 GB RAM',
+    isRecommended: false,
+  },
+];
 
 export type ModalProps = {
-  itemName: string
-  onSelect: () => void
-  onOpenChange: (open: boolean) => void
-}
+  itemName: string;
+  onSelect: () => void;
+  onOpenChange: (open: boolean) => void;
+};
 
 export function ModalAddWorkspace({
   itemName,
@@ -65,8 +65,8 @@ export function ModalAddWorkspace({
         <DialogTrigger className="w-full text-left">
           <DropdownMenuItem
             onSelect={(event) => {
-              event.preventDefault()
-              onSelect?.()
+              event.preventDefault();
+              onSelect?.();
             }}
           >
             {itemName}
@@ -193,5 +193,5 @@ export function ModalAddWorkspace({
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

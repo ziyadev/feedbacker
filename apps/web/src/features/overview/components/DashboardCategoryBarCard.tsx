@@ -1,19 +1,18 @@
-import { Badge } from "@feedbacker/ui"
-import { cx } from "@/lib/utils"
-import { KpiEntryExtended } from "./overview-analytics"
-
+import { Badge } from '@feedbacker/ui';
+import { cx } from '@/lib/utils';
+import { KpiEntryExtended } from './overview-analytics';
 
 export type CardProps = {
-  title: string
-  change: string
-  value: string
-  valueDescription: string
-  subtitle: string
-  ctaDescription: string
-  ctaText: string
-  ctaLink: string
-  data: KpiEntryExtended[]
-}
+  title: string;
+  change: string;
+  value: string;
+  valueDescription: string;
+  subtitle: string;
+  ctaDescription: string;
+  ctaText: string;
+  ctaLink: string;
+  data: KpiEntryExtended[];
+};
 
 export function CategoryBarCard({
   title,
@@ -60,7 +59,7 @@ export function CategoryBarCard({
             {data.map((item) => (
               <li key={item.title} className="flex items-center gap-2 text-xs">
                 <span
-                  className={cx(item.color, "size-2.5 rounded-sm")}
+                  className={cx(item.color, 'size-2.5 rounded-sm')}
                   aria-hidden="true"
                 />
                 <span className="text-gray-900 dark:text-gray-50">
@@ -74,12 +73,12 @@ export function CategoryBarCard({
           </ul>
         </div>
         <p className="mt-6 text-xs text-gray-500">
-          {ctaDescription}{" "}
+          {ctaDescription}{' '}
           <a href={ctaLink} className="text-indigo-600 dark:text-indigo-400">
             {ctaText}
           </a>
         </p>
       </div>
     </>
-  )
+  );
 }

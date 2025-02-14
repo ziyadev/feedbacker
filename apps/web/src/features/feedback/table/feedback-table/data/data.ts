@@ -1,3 +1,5 @@
+import { FeedbackPriority } from '@/graphql/graphql';
+import { FeedbackStatus } from '@/graphql/types';
 import { v4 as uuid } from 'uuid';
 import { Usage } from './schema';
 export const roles: { value: string; label: string }[] = [
@@ -21,18 +23,56 @@ export const roles: { value: string; label: string }[] = [
 
 export const statuses: { value: string; label: string; variant: string }[] = [
   {
-    value: 'live',
-    label: 'Live',
+    value: FeedbackStatus.Resolved,
+    label: 'Resolved',
     variant: 'success',
   },
   {
-    value: 'inactive',
-    label: 'Inactive',
+    value: FeedbackStatus.Open,
+    label: 'Open',
+    variant: 'success',
+  },
+  {
+    value: FeedbackStatus.Backlog,
+    label: 'Backlog',
     variant: 'neutral',
   },
   {
-    value: 'archived',
-    label: 'Archived',
+    value: FeedbackStatus.Closed,
+    label: 'Closed',
+    variant: 'neutral',
+  },
+  {
+    value: FeedbackStatus.InQa,
+    label: 'InQa',
+    variant: 'neutral',
+  },
+  {
+    value: FeedbackStatus.Todo,
+    label: 'Todo',
+    variant: 'warning',
+  },
+];
+export const priorities: { value: string; label: string; variant: string }[] = [
+  {
+    value: FeedbackPriority.Neutral,
+    label: 'Neutral',
+    variant: 'success',
+  },
+  {
+    value: FeedbackPriority.Low,
+    label: 'Low',
+    variant: 'neutral',
+  },
+
+  {
+    value: FeedbackPriority.Urgrgent,
+    label: 'Urgent',
+    variant: 'warning',
+  },
+  {
+    value: FeedbackPriority.High,
+    label: 'High',
     variant: 'warning',
   },
 ];

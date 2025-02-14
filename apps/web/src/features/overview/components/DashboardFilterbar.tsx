@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Select,
@@ -6,9 +6,9 @@ import {
   SelectItemPeriod,
   SelectTrigger,
   SelectValue,
-} from "@feedbacker/ui"
+} from '@feedbacker/ui';
 
-import { Label } from "@feedbacker/ui"
+import { Label } from '@feedbacker/ui';
 
 import {
   Dialog,
@@ -19,83 +19,83 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@feedbacker/ui"
+} from '@feedbacker/ui';
 
-import { PeriodValue } from "./overview-analytics"
-import { Button } from "@feedbacker/ui"
-import { Checkbox } from "@feedbacker/ui"
-import { DateRangePicker } from "@feedbacker/ui"
-import { cx } from "@/lib/utils"
-import { RiSettings5Line } from "@remixicon/react"
-import { eachDayOfInterval, interval, subDays, subYears } from "date-fns"
-import React from "react"
-import { DateRange } from "react-day-picker"
-import { ChartCard } from "./DashboardChartCard"
+import { PeriodValue } from './overview-analytics';
+import { Button } from '@feedbacker/ui';
+import { Checkbox } from '@feedbacker/ui';
+import { DateRangePicker } from '@feedbacker/ui';
+import { cx } from '@/lib/utils';
+import { RiSettings5Line } from '@remixicon/react';
+import { eachDayOfInterval, interval, subDays, subYears } from 'date-fns';
+import React from 'react';
+import { DateRange } from 'react-day-picker';
+import { ChartCard } from './DashboardChartCard';
 
 type Period = {
-  value: PeriodValue
-  label: string
-}
+  value: PeriodValue;
+  label: string;
+};
 
 const periods: Period[] = [
   {
-    value: "previous-period",
-    label: "Previous period",
+    value: 'previous-period',
+    label: 'Previous period',
   },
   {
-    value: "last-year",
-    label: "Last year",
+    value: 'last-year',
+    label: 'Last year',
   },
   {
-    value: "no-comparison",
-    label: "No comparison",
+    value: 'no-comparison',
+    label: 'No comparison',
   },
-]
+];
 
 export const getPeriod = (
   dateRange: DateRange | undefined,
-  value: PeriodValue,
+  value: PeriodValue
 ): DateRange | undefined => {
-  if (!dateRange) return undefined
-  const from = dateRange.from
-  const to = dateRange.to
+  if (!dateRange) return undefined;
+  const from = dateRange.from;
+  const to = dateRange.to;
   switch (value) {
-    case "previous-period":
-      let previousPeriodFrom
-      let previousPeriodTo
+    case 'previous-period':
+      let previousPeriodFrom;
+      let previousPeriodTo;
       if (from && to) {
-        const datesInterval = interval(from, to)
-        const numberOfDaysBetween = eachDayOfInterval(datesInterval).length
-        previousPeriodTo = subDays(from, 1)
-        previousPeriodFrom = subDays(previousPeriodTo, numberOfDaysBetween)
+        const datesInterval = interval(from, to);
+        const numberOfDaysBetween = eachDayOfInterval(datesInterval).length;
+        previousPeriodTo = subDays(from, 1);
+        previousPeriodFrom = subDays(previousPeriodTo, numberOfDaysBetween);
       }
-      return { from: previousPeriodFrom, to: previousPeriodTo }
-    case "last-year":
-      let lastYearFrom
-      let lastYearTo
+      return { from: previousPeriodFrom, to: previousPeriodTo };
+    case 'last-year':
+      let lastYearFrom;
+      let lastYearTo;
       if (from) {
-        lastYearFrom = subYears(from, 1)
+        lastYearFrom = subYears(from, 1);
       }
       if (to) {
-        lastYearTo = subYears(to, 1)
+        lastYearTo = subYears(to, 1);
       }
-      return { from: lastYearFrom, to: lastYearTo }
-    case "no-comparison":
-      return undefined
+      return { from: lastYearFrom, to: lastYearTo };
+    case 'no-comparison':
+      return undefined;
   }
-}
+};
 
 type FilterbarProps = {
-  maxDate?: Date
-  minDate?: Date
-  selectedDates: DateRange | undefined
-  onDatesChange: (dates: DateRange | undefined) => void
-  selectedPeriod: PeriodValue
-  onPeriodChange: (period: PeriodValue) => void
-  categories: any[]
-  setSelectedCategories: any
-  selectedCategories: any
-}
+  maxDate?: Date;
+  minDate?: Date;
+  selectedDates: DateRange | undefined;
+  onDatesChange: (dates: DateRange | undefined) => void;
+  selectedPeriod: PeriodValue;
+  onPeriodChange: (period: PeriodValue) => void;
+  categories: any[];
+  setSelectedCategories: any;
+  selectedCategories: any;
+};
 
 export function Filterbar({
   maxDate,
@@ -109,19 +109,19 @@ export function Filterbar({
   selectedCategories,
 }: FilterbarProps) {
   const [tempSelectedCategories, setTempSelectedCategories] =
-    React.useState(selectedCategories)
+    React.useState(selectedCategories);
 
   const handleCategoryChange = (category: string) => {
     setTempSelectedCategories((prev: any) =>
       prev.includes(category)
         ? prev.filter((item: any) => item !== category)
-        : [...prev, category],
-    )
-  }
+        : [...prev, category]
+    );
+  };
 
   const handleApply = () => {
-    setSelectedCategories(tempSelectedCategories)
-  }
+    setSelectedCategories(tempSelectedCategories);
+  };
   return (
     <div className="flex w-full justify-between">
       <div className="w-full sm:flex sm:items-center sm:gap-2">
@@ -140,7 +140,7 @@ export function Filterbar({
           defaultValue="no-comparison"
           value={selectedPeriod}
           onValueChange={(value) => {
-            onPeriodChange(value as PeriodValue)
+            onPeriodChange(value as PeriodValue);
           }}
         >
           <SelectTrigger className="mt-2 w-full sm:mt-0 sm:w-fit">
@@ -181,7 +181,7 @@ export function Filterbar({
           </DialogHeader>
           <div
             className={cx(
-              "mt-8 grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-scroll sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
+              'mt-8 grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-scroll sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
             )}
           >
             {categories.map((category) => {
@@ -207,7 +207,7 @@ export function Filterbar({
                     />
                   </div>
                 </Label>
-              )
+              );
             })}
           </div>
           <DialogFooter className="mt-6">
@@ -228,5 +228,5 @@ export function Filterbar({
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

@@ -1,75 +1,3 @@
-const BUSINESS_PLAN_MODIFIER = ({
-  name = 'Business',
-  monthly = 59,
-  yearly = 49,
-  users = 15,
-  ids = [],
-}: {
-  name: string;
-  monthly: number;
-  yearly: number;
-  users: number;
-  tags: number;
-  ids: string[];
-}) => ({
-  name,
-  tagline: 'For larger teams with increased usage',
-  link: 'https://dub.co/help/article/business-plan',
-  price: {
-    monthly,
-    yearly,
-    ids,
-  },
-  limits: {
-    tags: 1000000000,
-    users,
-    ai: 1000,
-    api: 3000,
-  },
-  colors: {
-    bg: 'bg-sky-900',
-    text: 'text-sky-900',
-  },
-  cta: {
-    text: 'Get started with Business',
-    shortText: 'Get started',
-    href: 'https://app.dub.co/register',
-    color: 'bg-black hover:bg-gray-800 hover:ring-gray-200',
-  },
-  featureTitle: 'Everything in Pro, plus:',
-  features: [
-    { text: '3-year analytics retention' },
-
-    {
-      text: 'Unlimited tags',
-      footnote: {
-        title:
-          'Use tags to organize your links and filter by them in your analytics dashboard.',
-        cta: 'Learn more.',
-        href: 'https://d.to/tags',
-      },
-    },
-    {
-      text: 'Real-time events stream',
-      footnote: {
-        title:
-          'Get more data on your link clicks and QR code scans with a detailed, real-time stream of events in your workspace',
-        cta: 'Learn more.',
-        href: 'https://d.to/events',
-      },
-    },
-    {
-      text: 'Event webhooks (beta)',
-      footnote: {
-        title:
-          'Get notified when a link is clicked or a QR code is scanned using webhooks.',
-        cta: 'Learn more.',
-        href: 'https://d.to/webhooks',
-      },
-    },
-  ],
-});
-
 export const PLANS = [
   {
     name: 'Free',
@@ -208,129 +136,21 @@ export const PLANS = [
       },
     ],
   },
-  BUSINESS_PLAN_MODIFIER({
-    name: 'Business',
-    monthly: 59,
-    yearly: 49,
-    tags: 150,
-    users: 15,
-    ids: [
-      'price_1OzNlmAlJJEpqkPV7s9HXNAC', // monthly (test)
-      'price_1OzNmXAlJJEpqkPVYO89lTdx', // yearly (test)
-      'price_1OzOFIAlJJEpqkPVJxzc9irl', // monthly (prod)
-      'price_1OzOXMAlJJEpqkPV9ERrjjbw', // yearly (prod)
-    ],
-  }),
-  BUSINESS_PLAN_MODIFIER({
-    name: 'Business Plus',
-    monthly: 119,
-    yearly: 99,
-    tags: 300,
-    users: 30,
-    ids: [
-      'price_1OnWu0AlJJEpqkPVWk4144ZG', // monthly (test)
-      'price_1OnWu0AlJJEpqkPVkDWVriAB', // yearly (test)
-      'price_1OnaK3AlJJEpqkPVaCfCPdHi', // monthly (prod)
-      'price_1OzObrAlJJEpqkPVh6D9HWGO', // yearly (prod)
-    ],
-  }),
-  BUSINESS_PLAN_MODIFIER({
-    name: 'Business Extra',
-    monthly: 249,
-    yearly: 199,
-    tags: 500,
-    users: 50,
-    ids: [
-      'price_1OnWvCAlJJEpqkPVLzLHx5QD', // monthly (test)
-      'price_1OnWvCAlJJEpqkPVHhCCvIOq', // yearly (test)
-      'price_1OnaKJAlJJEpqkPVeJSvPfJb', // monthly (prod)
-      'price_1OzOg1AlJJEpqkPVPlsrxoWm', // yearly (prod)
-    ],
-  }),
-  BUSINESS_PLAN_MODIFIER({
-    name: 'Business Max',
-    monthly: 499,
-    yearly: 399,
-    tags: 1000,
-    users: 100,
-    ids: [
-      'price_1OnWwLAlJJEpqkPVXtJyPqLk', // monthly (test)
-      'price_1OnWwLAlJJEpqkPV4eMbOkNh', // yearly (test)
-      'price_1OnaKOAlJJEpqkPVV6gkZPgt', // monthly (prod)
-      'price_1OzOh5AlJJEpqkPVtCSX7dlE', // yearly (prod)
-    ],
-  }),
-  {
-    name: 'Enterprise',
-    tagline:
-      "Custom tailored plans for large enterprises. Whether you're running a SMS campaign with millions of short links or a large marketing campaign with billions of clicks, we've got you covered.",
-    link: 'https://dub.co/enterprise',
-    price: {
-      monthly: null,
-      yearly: null,
-    },
-    limits: {
-      links: 250000,
-      clicks: 5000000,
-      domains: 1000,
-      tags: 1000,
-      users: 500,
-      ai: 10000,
-      api: 10000,
-    },
-    colors: {
-      bg: 'bg-violet-600',
-      text: 'text-violet-600',
-    },
-    cta: {
-      text: 'Contact us',
-      href: '/enterprise',
-      color:
-        'bg-gradient-to-r from-violet-600 to-pink-600 hover:ring-violet-100',
-    },
-    featureTitle: 'Everything in Business, plus:',
-    features: [
-      { text: 'Custom usage limits' },
-      { text: 'Volume discounts' },
-      { text: 'SSO/SAML' },
-      { text: 'Role-based access controls' },
-      { text: 'Custom contract & SLA' },
-      { text: 'Whiteglove onboarding' },
-      { text: 'Dedicated success manager' },
-      { text: 'Priority support' },
-      { text: 'Dedicated Slack channel' },
-    ],
-  },
-];
+] as const;
 
-export const FREE_PLAN = PLANS.find((plan) => plan.name === 'Free')!;
-export const PRO_PLAN = PLANS.find((plan) => plan.name === 'Pro')!;
-export const BUSINESS_PLAN = PLANS.find((plan) => plan.name === 'Business')!;
-export const ENTERPRISE_PLAN = PLANS.find(
-  (plan) => plan.name === 'Enterprise'
-)!;
+export const FREE_PLAN = PLANS[0];
+export const PRO_PLAN = PLANS[1];
 
-export const PUBLIC_PLANS = [
-  FREE_PLAN,
-  PRO_PLAN,
-  BUSINESS_PLAN,
-  ENTERPRISE_PLAN,
-];
+export const PUBLIC_PLANS = [FREE_PLAN, PRO_PLAN];
 
-export const SELF_SERVE_PAID_PLANS = PLANS.filter(
-  (p) => p.name !== 'Free' && p.name !== 'Enterprise'
-);
+export const SELF_SERVE_PAID_PLANS = PLANS.filter((p) => p.name !== 'Free');
 
 export const FREE_WORKSPACES_LIMIT = 2;
-
-export const getPlanFromPriceId = (priceId: string) => {
-  return PLANS.find((plan) => plan.price.ids?.includes(priceId)) || null;
-};
 
 export const getPlanDetails = (plan: string) => {
   return SELF_SERVE_PAID_PLANS.find(
     (p) => p.name.toLowerCase() === plan.toLowerCase()
-  )!;
+  );
 };
 
 export const getCurrentPlan = (plan: string) => {

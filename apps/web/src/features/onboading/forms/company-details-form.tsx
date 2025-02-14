@@ -1,14 +1,14 @@
 import getUnicodeFlagIcon from 'country-flag-icons/unicode';
 
 import {
-    Button,
-    InputMessage,
-    Label,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Button,
+  InputMessage,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui';
 import { CreateUserProfileErrorCode } from '@/graphql/types';
 import { useMutation } from '@apollo/client';

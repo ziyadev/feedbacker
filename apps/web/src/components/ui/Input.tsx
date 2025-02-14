@@ -52,11 +52,10 @@ const inputStyles = tv({
 
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
-  VariantProps<typeof inputStyles> {
+    VariantProps<typeof inputStyles> {
   inputClassName?: string;
 }
-type InputMessageProps
-  = React.InputHTMLAttributes<HTMLSpanElement>
+type InputMessageProps = React.InputHTMLAttributes<HTMLSpanElement>;
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -146,17 +145,17 @@ Input.displayName = 'Input';
 
 const InputMessage = React.forwardRef<HTMLSpanElement, InputMessageProps>(
   (
-    {
-      className,
-      children,
-      ...props
-    }: InputProps,
+    { className, children, ...props }: InputProps,
 
     forwardedRef
   ) => {
-
     return (
-      <span ref={forwardedRef} className={cx(' text-sm  text-red-500 dark:text-red-700', className)} tremor-id="tremor-raw" {...props}>
+      <span
+        ref={forwardedRef}
+        className={cx(' text-sm  text-red-500 dark:text-red-700', className)}
+        tremor-id="tremor-raw"
+        {...props}
+      >
         {children}
       </span>
     );
@@ -164,8 +163,5 @@ const InputMessage = React.forwardRef<HTMLSpanElement, InputMessageProps>(
 );
 
 InputMessage.displayName = 'InputMessage';
-
-
-
 
 export { Input, inputStyles, type InputProps, InputMessage };

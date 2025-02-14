@@ -1,6 +1,6 @@
 type DeepEqual = (
   obj1: Record<string, any>,
-  obj2: Record<string, any>,
+  obj2: Record<string, any>
 ) => boolean;
 
 export const deepEqual: DeepEqual = (obj1, obj2) => {
@@ -9,8 +9,8 @@ export const deepEqual: DeepEqual = (obj1, obj2) => {
   }
 
   if (
-    typeof obj1 !== "object" ||
-    typeof obj2 !== "object" ||
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object' ||
     obj1 === null ||
     obj2 === null
   ) {

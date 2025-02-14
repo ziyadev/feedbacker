@@ -1,48 +1,48 @@
 // Tremor Popover [v0.0.3]
 
-import React from "react"
-import * as PopoverPrimitives from "@radix-ui/react-popover"
+import React from 'react';
+import * as PopoverPrimitives from '@radix-ui/react-popover';
 
-import { cx } from "@/lib/utils"
+import { cx } from '@/lib/utils';
 
 const Popover = (
-  props: React.ComponentPropsWithoutRef<typeof PopoverPrimitives.Root>,
+  props: React.ComponentPropsWithoutRef<typeof PopoverPrimitives.Root>
 ) => {
-  return <PopoverPrimitives.Root {...props} />
-}
+  return <PopoverPrimitives.Root {...props} />;
+};
 
-Popover.displayName = "Popover"
+Popover.displayName = 'Popover';
 
 const PopoverTrigger = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitives.Trigger>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitives.Trigger>
 >((props, forwardedRef) => {
-  return <PopoverPrimitives.Trigger ref={forwardedRef} {...props} />
-})
+  return <PopoverPrimitives.Trigger ref={forwardedRef} {...props} />;
+});
 
-PopoverTrigger.displayName = "PopoverTrigger"
+PopoverTrigger.displayName = 'PopoverTrigger';
 
 const PopoverAnchor = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitives.Anchor>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitives.Anchor>
 >((props, forwardedRef) => {
-  return <PopoverPrimitives.Anchor ref={forwardedRef} {...props} />
-})
+  return <PopoverPrimitives.Anchor ref={forwardedRef} {...props} />;
+});
 
-PopoverAnchor.displayName = "PopoverAnchor"
+PopoverAnchor.displayName = 'PopoverAnchor';
 
 const PopoverClose = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitives.Close>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitives.Close>
 >((props, forwardedRef) => {
-  return <PopoverPrimitives.Close ref={forwardedRef} {...props} />
-})
+  return <PopoverPrimitives.Close ref={forwardedRef} {...props} />;
+});
 
-PopoverClose.displayName = "PopoverClose"
+PopoverClose.displayName = 'PopoverClose';
 
 type ContentProps = React.ComponentPropsWithoutRef<
   typeof PopoverPrimitives.Content
->
+>;
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitives.Content>,
@@ -52,13 +52,13 @@ const PopoverContent = React.forwardRef<
     {
       className,
       sideOffset = 10,
-      side = "bottom",
-      align = "center",
+      side = 'bottom',
+      align = 'center',
       collisionPadding,
       avoidCollisions = true,
       ...props
     }: ContentProps,
-    forwardedRef,
+    forwardedRef
   ) => {
     return (
       <PopoverPrimitives.Portal>
@@ -71,41 +71,41 @@ const PopoverContent = React.forwardRef<
           avoidCollisions={avoidCollisions}
           className={cx(
             // base
-            "max-h-[var(--radix-popper-available-height)] min-w-60 overflow-hidden rounded-md border p-2.5 text-sm shadow-md",
+            'max-h-[var(--radix-popper-available-height)] min-w-60 overflow-hidden rounded-md border p-2.5 text-sm shadow-md',
             // border color
-            "border-gray-200 dark:border-gray-800",
+            'border-gray-200 dark:border-gray-800',
             // text color
-            "text-gray-900 dark:text-gray-50",
+            'text-gray-900 dark:text-gray-50',
             // background color
-            "bg-white dark:bg-gray-950",
+            'bg-white dark:bg-gray-950',
             // transition
-            "will-change-[transform,opacity]",
-            "data-[state=closed]:animate-hide",
-            "data-[state=open]:data-[side=bottom]:animate-slideDownAndFade data-[state=open]:data-[side=left]:animate-slideLeftAndFade data-[state=open]:data-[side=right]:animate-slideRightAndFade data-[state=open]:data-[side=top]:animate-slideUpAndFade",
+            'will-change-[transform,opacity]',
+            'data-[state=closed]:animate-hide',
+            'data-[state=open]:data-[side=bottom]:animate-slideDownAndFade data-[state=open]:data-[side=left]:animate-slideLeftAndFade data-[state=open]:data-[side=right]:animate-slideRightAndFade data-[state=open]:data-[side=top]:animate-slideUpAndFade',
 
-            className,
+            className
           )}
           tremor-id="tremor-raw"
           // https://github.com/radix-ui/primitives/issues/1159
           onWheel={(event) => {
-            event.stopPropagation()
-            const isScrollingDown = event.deltaY > 0
+            event.stopPropagation();
+            const isScrollingDown = event.deltaY > 0;
             if (isScrollingDown) {
               event.currentTarget.dispatchEvent(
-                new KeyboardEvent("keydown", { key: "ArrowDown" }),
-              )
+                new KeyboardEvent('keydown', { key: 'ArrowDown' })
+              );
             } else {
               event.currentTarget.dispatchEvent(
-                new KeyboardEvent("keydown", { key: "ArrowUp" }),
-              )
+                new KeyboardEvent('keydown', { key: 'ArrowUp' })
+              );
             }
           }}
           {...props}
         />
       </PopoverPrimitives.Portal>
-    )
-  },
-)
-PopoverContent.displayName = "PopoverContent"
+    );
+  }
+);
+PopoverContent.displayName = 'PopoverContent';
 
-export { Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger }
+export { Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger };

@@ -3,7 +3,7 @@ export const pluralize = (
   count: number,
   options: {
     plural?: string;
-  } = {},
+  } = {}
 ) => {
   if (count === 1) {
     return word;

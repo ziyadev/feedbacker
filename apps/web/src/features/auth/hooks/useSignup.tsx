@@ -1,13 +1,12 @@
-import { ApolloError, useMutation } from "@apollo/client";
-import { CREDENTIALS_SIGN_UP } from "../api/mutations";
+import { ApolloError, useMutation } from '@apollo/client';
+import { CREDENTIALS_SIGN_UP } from '../api/mutations';
 
 export const useSignup = ({
-      onError,
-      onSuccess,
+  onError,
+  onSuccess,
 }: {
-      onSuccess?: () => void;
-      onError?: (e: ApolloError) => void;
+  onSuccess?: () => void;
+  onError?: (e: ApolloError) => void;
 }) => {
-
-      return
+  return;
 };

@@ -6,7 +6,6 @@ export default function WebhookTable() {
   return (
     <div className="space-y-3 ">
       <DataTable data={usage} columns={columns} />
-
     </div>
   );
 }
